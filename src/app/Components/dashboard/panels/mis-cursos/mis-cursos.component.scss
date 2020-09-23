@@ -1,0 +1,70 @@
+@import '../../../../../styles.scss';
+
+@media only all {
+  .big-screen-only-cursos,
+  .small-screen-only-cursos {
+    display: none !important;
+    margin: auto !important;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .big-screen-only-cursos {
+    display: block !important;
+    margin: auto !important;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .small-screen-only-cursos {
+    display: block !important;
+    margin: auto !important;
+  }
+}
+
+#mis-cursos {
+  height: 300px;
+}
+
+#body-table {
+  padding: 2% 2% 2% 4%;
+}
+
+.ui-panel-content {
+  padding: 0px !important;
+}
+
+.ui-dialog-content {
+  padding: 0px !important;
+}
+
+.calendar {
+  width: 100%;
+}
+
+.data-fill {
+  background-color: #2ca8b1 !important;
+  color: #ffffff !important;
+}
+
+.columna-hora {
+  background-color: #f1f1f1 !important;
+  text-align: center !important;
+}
+
+.padding-3 {
+  padding: 3px;
+}
+
+.no-padding-left {
+  padding-left: 0px;
+}
+
+.no-padding-top-bottom {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.normal-padding-bottom {
+  padding-bottom: 15px !important;
+}

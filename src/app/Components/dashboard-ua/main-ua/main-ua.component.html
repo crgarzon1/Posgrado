@@ -1,0 +1,48 @@
+<div style="width: 100%; text-align: center; font-size: 14px;" *ngIf="programa">
+  <p>
+    <b>{{ programa }}</b> <br />
+    <b>{{ cargo }}</b>
+    <b style="font-size: 13px;">{{ nombre }}</b>
+  </p>
+</div>
+
+<div class="ui-g">
+  <div class="ui-lg-4 ui-md-6 ui-sm-12">
+    <app-embudo-conversion></app-embudo-conversion>
+  </div>
+  <div class="ui-lg-4 ui-md-6 ui-sm-12">
+    <app-matriculados-tipo-estudiante></app-matriculados-tipo-estudiante>
+  </div>
+  <div class="ui-lg-4 ui-md-6 ui-sm-12">
+    <app-estado-notas></app-estado-notas>
+  </div>
+  <div class="ui-lg-4 ui-md-0 ui-sm-0"></div>
+  <div class="ui-lg-4 ui-md-6 ui-sm-12">
+    <app-boxplot></app-boxplot>
+  </div>
+  <div class="ui-lg-4 ui-md-0 ui-sm-0"></div>
+</div>
+
+<div class="float-button" *ngIf="showButtonInfo">
+  <button
+    pButton
+    type="button"
+    icon="pi pi-info"
+    (click)="showTooltip()"
+    class="float-btn ui-button-raised ui-button-success"
+  ></button>
+</div>
+
+<p-toast position="bottom-right" key="c" [baseZIndex]="50000">
+  <ng-template let-message pTemplate="message">
+    <div>
+      <h2 style="text-align: center;">{{ message.detail }}</h2>
+      <h3>{{ infoUsuario.nombre }}</h3>
+      <p *ngFor="let prop of infoUsuario.propiedades">
+        <b>{{ prop.key }}:</b> {{ prop.value }}
+      </p>
+    </div>
+  </ng-template>
+</p-toast>
+
+<p-toast position="top-center"></p-toast>

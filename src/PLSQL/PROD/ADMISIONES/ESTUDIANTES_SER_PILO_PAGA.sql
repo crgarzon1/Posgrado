@@ -1,0 +1,18 @@
+CREATE VIEW ESTUDIANTES_SER_PILO_PAGA AS
+    SELECT A.CODIGO,
+           B.ANIO_REGISTRO,
+           B.CICLO_REGISTRO,
+           C.NOMBRE,
+           D.NUMERO_DOCUMENTO,
+           B.ID_ESTADO
+    FROM B_ESTUDIANTES             A
+    INNER JOIN CTI_ESTUDIANTE_CONVENIO   B ON A.CODIGO = B.CODIGO_ESTUDIANTE
+    INNER JOIN CTI_CONVENIO              C ON B.ID_CONVENIO = C.ID_CONVENIO
+    INNER JOIN DATOS_PERSONALES          D ON A.CODIGO = D.CODIGO_ESTUDIANTE
+    ORDER BY 2,
+             3,
+             4,
+             1;
+             
+             
+             

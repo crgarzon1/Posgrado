@@ -1,0 +1,39 @@
+@import '../../../../styles.scss';
+
+.trash:hover {
+  animation: bounce 1s;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.trash {
+  color: red;
+  margin-left: 25%;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  60%,
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+
+  80% {
+    -webkit-transform: translateY(-5px);
+    transform: translateY(-5px);
+  }
+}
+
+.cursiva {
+  font-style: italic;
+}
+.normal {
+  font-style: normal;
+}

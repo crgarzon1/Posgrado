@@ -1,0 +1,159 @@
+<p-blockUI [target]="pnl" [blocked]="blocked">
+  <i
+    class="pi pi-info-circle"
+    style="position: absolute; top: 30%; left: 36%; font-size: 10em;"
+    pTooltip="No existen estudiantes matriculados"
+    tooltipZIndex="99999"
+  ></i>
+</p-blockUI>
+
+<p-panel #pnl [header]="stringHelper.getResource('titulo-matriculados')">
+  <div class="ui-g" style="min-height: 335px;" *ngIf="blocked">
+    <img src="assets/images/matriculados.jpg" alt="block-ui" style="width: 100%; height: 100%; margin: auto;" />
+  </div>
+  <div class="ui-g" style="min-height: 335px;" *ngIf="!blocked">
+    <div class="ui-g-12 ui-sm-12">
+      <p-dropdown
+        [options]="dropDownOptions"
+        [optionLabel]="label"
+        (onChange)="onChartChange($event)"
+        [(ngModel)]="selectedChart"
+      ></p-dropdown>
+    </div>
+    <div class="ui-g-12 ui-sm-12">
+      <p-chart type="bar" [data]="data" height="100%" [options]="options"></p-chart>
+    </div>
+    <div class="ui-g-12 ui-sm-12" style="position: relative; text-align: center;">
+      <i
+        [pTooltip]="labelTooltip"
+        class="pi pi-clone"
+        (click)="showDialog()"
+        style="font-size: 2em; position: absolute !important; bottom: 6px !important; right: 6px !important; cursor: pointer;"
+      ></i>
+    </div>
+  </div>
+</p-panel>
+
+<p-dialog
+  [header]="stringHelper.getResource('dlg-header')"
+  [(visible)]="display"
+  [modal]="true"
+  [responsive]="true"
+  [style]="{ width: '80%', minWidth: '80%' }"
+  [maximizable]="true"
+  [baseZIndex]="10000"
+>
+  <iframe
+    width="100%"
+    style="min-height: 700px; height: 100%;"
+    [src]="url | safe"
+    *ngIf="!mostrarEstudiantesTipoIngreso"
+  ></iframe>
+  <div width="100%" style="min-height: 700px; height: 100%;" *ngIf="mostrarEstudiantesTipoIngreso">
+    <p-table #dt [value]="estudiantes">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>Créditos Matriculados</th>
+          <th>Créditos Inscritos</th>
+          <th>Estado</th>
+          <th>Créditos Adicionales</th>
+        </tr>
+        <tr>
+          <th>
+            <input pInputText style="width: 100%;" type="text" (input)="dt.filter($event.target.value, 'codigo', 'contains')" />
+          </th>
+          <th>
+            <input pInputText style="width: 100%;" type="text" (input)="dt.filter($event.target.value, 'nombre', 'contains')" />
+          </th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-estudiante>
+        <tr>
+          <td>{{ estudiante.codigo }}</td>
+          <td>{{ estudiante.nombre }}</td>
+          <td>{{ estudiante.creditosMatriculados }}</td>
+          <td>{{ estudiante.creditosInscritos }}</td>
+          <td>{{ estudiante.estado }}</td>
+          <td>{{ estudiante.creditosAdicionales }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-dialog>
+
+<p-dialog
+  [header]="stringHelper.getResource('dlg-header')"
+  [(visible)]="mostrarEstudiantesPlanEstudio"
+  [modal]="true"
+  [responsive]="true"
+  [style]="{ width: '35%', minWidth: '25%' }"
+  [maximizable]="true"
+  [baseZIndex]="10000"
+>
+  <div style="width: 80%; margin: auto;">
+    <div style="width: 100%;">
+      <div style="width: 100%;">
+        <h3>Buscar Estudiante:</h3>
+      </div>
+      <div class="ui-inputgroup" style="width: 100%;">
+        <p-autoComplete
+          [(ngModel)]="estudianteBusqueda"
+          [suggestions]="estudiantesBusqueda"
+          (completeMethod)="filterEstudiantes($event)"
+          field="nombre"
+          placeholder="Buscar"
+          [minLength]="3"
+          size="40"
+          emptyMessage="El usuario no existe o no cumple con los criterios de busqueda"
+          (onSelect)="doOnSelect($event)"
+          pTooltip="Únicamente seran visibles los 10 primeros usuarios compatibles con los criterios"
+          tooltipZIndex="100000"
+          appendTo="body"
+          baseZIndex="100000"
+        ></p-autoComplete>
+        <!-- <button pButton type="button" (click)="displayGuiaPago()" label="Buscar"></button> -->
+      </div>
+    </div>
+    <br />
+    <div style="width: 100%;" *ngIf="mostrarCambioPlan">
+      <p><b>Nombre:</b> {{ estudianteBusqueda.nombre }}</p>
+      <p><b>Codigo:</b> {{ estudianteBusqueda.codigo }}</p>
+      <p>
+        <b>Plan actual:</b>
+        {{
+          estudianteBusqueda.plan ? estudianteBusqueda.plan.id + ' - ' + estudianteBusqueda.plan.plan : 'No tiene
+				un plan activo'
+        }}
+      </p>
+      <br />
+      <p><b>Asignar plan:</b></p>
+      <div style="width: 100%;">
+        <p-dropdown
+          [options]="planesDisp"
+          [(ngModel)]="planSelected"
+          optionLabel="planEstudio"
+          appendTo="body"
+          baseZIndex="10000"
+          [autoWidth]="false"
+        ></p-dropdown>
+      </div>
+      <p><b>Nuevo plan: </b>{{ planSelected.planEstudio + ' - ' + planSelected.descripcion }}</p>
+      <br />
+      <button
+        pButton
+        type="button"
+        label="Guardar"
+        style="width: 100%; margin-bottom: 10px;"
+        (click)="guardarPlanNuevo()"
+      ></button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-toast [style]="{ marginTop: '80px' }" position="top-center" baseZIndex="100000"></p-toast>

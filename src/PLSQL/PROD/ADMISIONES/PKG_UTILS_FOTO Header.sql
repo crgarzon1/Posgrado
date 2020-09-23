@@ -1,0 +1,15 @@
+create or replace PACKAGE            PKG_UTILS_FOTO IS
+
+  /* Author  : JOSEPH MONROY*/
+  /* Created : 22/06/2005 03:36:43 p.m.*/
+  /* Purpose :*/
+    FUNCTION GETFOTOCODIGOMAYOR (
+        P_CODIGO VARCHAR2
+    ) RETURN VARCHAR2;
+
+    FUNCTION GETFOTODOCTORADO (
+        P_CODIGO VARCHAR2
+    ) RETURN VARCHAR2;
+
+END PKG_UTILS_FOTO;
+

@@ -1,0 +1,145 @@
+SELECT *
+FROM CORREOS_INSTITUCIONALES
+WHERE CORREO LIKE '%arengifo96%';
+
+SELECT *
+FROM ALL_SOURCE
+WHERE LOWER (TEXT) LIKE LOWER ('%TOTAL CREDITOS ELECTIVOS DISCIPLINARES%');
+
+DROP FUNCTION ESTADO_MATERIAS;
+
+DROP TYPE MATERIAS_ESTUDIANTE;
+
+DROP TYPE MATERIA_ESTUDIANTE;
+
+CREATE OR REPLACE TYPE MATERIA_ESTUDIANTE AS OBJECT (
+    SEMESTRE         NUMBER,
+    CODIGO_MATERIA   VARCHAR2 (5),
+    NOMBRE_MATERIA   VARCHAR2 (250),
+    CREDITOS         NUMBER,
+    NOTA             NUMBER,
+    APROBADA         NUMBER,
+    CURSANDO         NUMBER
+);
+/
+
+CREATE OR REPLACE TYPE MATERIAS_ESTUDIANTE AS
+    TABLE OF MATERIA_ESTUDIANTE;
+/
+
+CREATE OR REPLACE FUNCTION ESTADO_MATERIAS (
+    P_CODIGO_ESTUDIANTE VARCHAR2
+) RETURN MATERIAS_ESTUDIANTE IS
+
+    V_RETURNABLE          MATERIAS_ESTUDIANTE;
+    V_TIPO_PROGRAMA       NUMBER;
+    V_TIPO_PREGRADO       NUMBER DEFAULT 1;
+    V_TIPO_POSTGRADO      NUMBER DEFAULT 2;
+    V_TIPO_YOPAL          NUMBER DEFAULT 4;
+    V_ANIO                VARCHAR2 (4) DEFAULT NULL;
+    V_CICLO               VARCHAR2 (2) DEFAULT NULL;
+    V_ESQUEMA_PRINCIPAL   VARCHAR2 (256) DEFAULT NULL;
+    V_ESQUEMA             VARCHAR2 (256) DEFAULT NULL;
+    V_QUERY               VARCHAR2 (4000);
+    V_JOIN_OPERATOR VARCHAR2(20) DEFAULT 'LEFT JOIN';
+BEGIN
+    IF SUBSTR (P_CODIGO_ESTUDIANTE, '0', '2') = '46' THEN
+        V_TIPO_PROGRAMA       := V_TIPO_YOPAL;
+        V_ESQUEMA_PRINCIPAL   := 'YOPAL';
+    ELSIF SUBSTR (P_CODIGO_ESTUDIANTE, '0', '2') < '71' THEN
+        V_TIPO_PROGRAMA       := V_TIPO_PREGRADO;
+        V_ESQUEMA_PRINCIPAL   := 'ADMISIONES';
+    ELSIF SUBSTR (P_CODIGO_ESTUDIANTE, '0', '2') >= '71' THEN
+        V_TIPO_PROGRAMA       := V_TIPO_POSTGRADO;
+        V_ESQUEMA_PRINCIPAL   := 'POSTGRADO';
+    END IF;
+
+    PKG_UTILS.GETANIOCICLOESQUEMA (V_TIPO_PROGRAMA, V_ANIO, V_CICLO, V_ESQUEMA);
+    
+    IF(GRADUADO(P_CODIGO_ESTUDIANTE) = '1') THEN
+        V_JOIN_OPERATOR := 'INNER JOIN';
+    END IF;
+    
+    V_QUERY := 
+        q'!
+                    SELECT MATERIA_ESTUDIANTE (TO_NUMBER (MATERIA.SEMESTRE), MATERIA.CODIGO, TRIM (MATERIA.NOMBRE), MATERIA.CREDITOS, NOTA.VALOR,
+                                               CASE
+                                        WHEN NOTA.VALOR IS NOT NULL
+                                             AND ((NOTA.INDICADOR != 'V'
+                                                   AND NOTA.VALOR >= 3)
+                                                  OR (NOTA.INDICADOR = 'V'
+                                                      AND NOTA.VALOR >= 3.5)) THEN
+                                            1
+                                        ELSE
+                                            0
+                                    END,
+                                               CASE
+                                                   WHEN PREMATRICULA.MATERIA_PLAN IS NOT NULL THEN
+                                                       1
+                                                   ELSE
+                                                       0
+                                               END
+                    ) 
+                    FROM !' || V_ESQUEMA_PRINCIPAL || q'!.B_ESTUDIANTES    ESTUDIANTE
+                    INNER JOIN !' || V_ESQUEMA_PRINCIPAL || q'!.A_MATERIAS       MATERIA ON ESTUDIANTE.CODIGO_FACULTAD = MATERIA.CODIGO_FACULTAD
+                                                     AND ESTUDIANTE.JORNADA_FACULTAD = MATERIA.JORNADA_FACULTAD
+                                                     AND ESTUDIANTE.PLAN_ESTUDIO = MATERIA.PLAN_ESTUDIO
+                    !' || V_JOIN_OPERATOR || ' ' || V_ESQUEMA_PRINCIPAL || q'!.A_NOTAS          NOTA ON NOTA.CODIGO_ESTUDIANTE = ESTUDIANTE.CODIGO
+                                              AND NOTA.CODIGO_MATERIA = MATERIA.CODIGO
+                                              AND NOTA.CODIGO_FACULTAD = ESTUDIANTE.CODIGO_FACULTAD
+                                              AND NOTA.JORNADA_FACULTAD = ESTUDIANTE.JORNADA_FACULTAD
+                                              AND NOTA.IND_HNVOPLAN = ESTUDIANTE.PLAN_ESTUDIO
+                    LEFT JOIN !' || V_ESQUEMA || q'!.B_PREMATRICULA   PREMATRICULA ON PREMATRICULA.CODIGO_ESTUDIANTE = ESTUDIANTE.CODIGO
+                                                             AND PREMATRICULA.MATERIA_PLAN = MATERIA.CODIGO
+                                                             AND PREMATRICULA.FACULTAD = ESTUDIANTE.CODIGO_FACULTAD
+                                                             AND PREMATRICULA.JORNADA_FACULTAD = ESTUDIANTE.JORNADA_FACULTAD
+                    WHERE ESTUDIANTE.CODIGO = :codigoEstudiante
+                          AND MATERIA.SEMESTRE != '00'
+                    ORDER BY TO_NUMBER (MATERIA.SEMESTRE),
+                             MATERIA.CODIGO
+        !';
+
+    EXECUTE IMMEDIATE V_QUERY BULK COLLECT
+    INTO V_RETURNABLE
+        USING P_CODIGO_ESTUDIANTE;
+    RETURN V_RETURNABLE;
+END;
+/
+
+
+SELECT DISTINCT *
+FROM TABLE (ESTADO_MATERIAS ('70081039'));
+            
+            
+SELECT TOTAL_CREDITOS,
+       CREDITOS_APROBADOS,
+       TOTAL_CREDITOS - CREDITOS_APROBADOS CREDITOS_FALTANTES,
+       CASE WHEN TOTAL_CREDITOS != 0 THEN ROUND (100 / TOTAL_CREDITOS * CREDITOS_APROBADOS, 1) ELSE 0 END PORCENTAJE_CREDITOS_APROBADOS,
+       TOTAL_MATERIAS,
+       MATERIAS_APROBADAS,
+       TOTAL_MATERIAS - MATERIAS_APROBADAS MATERIAS_FALTANTES,
+       CASE WHEN TOTAL_MATERIAS != 0 THEN  ROUND (100 / TOTAL_MATERIAS * MATERIAS_APROBADAS, 1) ELSE 0 END PORCENTAJE_MATERIAS_APROBADOS,
+       CREDITOS_CURSADOS,
+       MATERIAS_CURSADAS,
+       MATERIAS_CURSANDO
+FROM (SELECT NVL(SUM (CREDITOS), '0') TOTAL_CREDITOS,
+             COUNT (CODIGO_MATERIA) TOTAL_MATERIAS
+      FROM (SELECT DISTINCT CODIGO_MATERIA,
+                            CREDITOS
+            FROM TABLE (ESTADO_MATERIAS ('2'))
+           ) MATERIAS_UNICAS
+     ),
+     (SELECT NVL(SUM (CREDITOS), '0') CREDITOS_APROBADOS,
+             COUNT (CODIGO_MATERIA) MATERIAS_APROBADAS
+      FROM TABLE (ESTADO_MATERIAS ('2'))
+      WHERE APROBADA = '1'
+     ) MATERIAS_APROBADAS,
+     (SELECT NVL(SUM (CREDITOS), '0') CREDITOS_CURSADOS,
+             COUNT (CODIGO_MATERIA) MATERIAS_CURSADAS
+      FROM TABLE (ESTADO_MATERIAS ('2'))
+      WHERE NOTA IS NOT NULL
+     ) MATERIAS_CURSADAS,
+     (SELECT COUNT (CODIGO_MATERIA) MATERIAS_CURSANDO
+      FROM TABLE (ESTADO_MATERIAS ('2'))
+      WHERE CURSANDO = '1'
+     ) MATERIAS_CURSANDO;

@@ -1,0 +1,68 @@
+CREATE OR REPLACE TRIGGER AUMENTARCUPO AFTER
+    UPDATE OR DELETE ON B_PREMATRICULA
+    REFERENCING
+            NEW AS NEW
+            OLD AS OLD
+    FOR EACH ROW
+DECLARE
+    V_ESQUEMA_GRUPO NUMBER;    
+    V_PREGRADO NUMBER DEFAULT '1';
+    V_POSTGRADO NUMBER DEFAULT '2';
+    V_CONSECUTIVO NUMBER;
+    V_NUMEROERROR NUMBER;
+    V_TEXTOERROR VARCHAR2 (200);
+BEGIN
+    SELECT UNIQUE ESQUEMA,
+                  CONSECUTIVO
+    INTO          V_ESQUEMA_GRUPO,
+                  V_CONSECUTIVO
+    FROM          (SELECT V_PREGRADO ESQUEMA,
+                          CONSECUTIVO
+                   FROM   ADMISIONES.A_HORARIO_HORIZONTAL
+                   WHERE      CODIGO_FACULTAD = :OLD.FACULTAD_CURSAR 
+                          AND CODIGO_MATERIA = :OLD.MATERIA_CURSAR 
+                          AND TO_NUMBER (GRUPO_MATERIA) = :OLD.GRUPO
+                   UNION
+                   SELECT V_POSTGRADO,
+                          CONSECUTIVO
+                   FROM   POSTGRADO.A_HORARIO_HORIZONTAL
+                   WHERE      CODIGO_FACULTAD = :OLD.FACULTAD_CURSAR 
+                          AND CODIGO_MATERIA = :OLD.MATERIA_CURSAR 
+                          AND TO_NUMBER (GRUPO_MATERIA) = :OLD.GRUPO) B;    
+    IF DELETING THEN
+        IF (V_ESQUEMA_GRUPO = V_POSTGRADO) THEN
+            POSTGRADO.PKG_MATRICULA.MODIFICARCUPO(V_CONSECUTIVO, -1);   
+        ELSIF (V_ESQUEMA_GRUPO = V_PREGRADO AND :OLD.INDICADOR_REGLAMENTO IS NULL) THEN
+            UPDATE ADMISIONES.A_HORARIO_HORIZONTAL
+            SET    CUPO_UTILIZADO = CUPO_UTILIZADO - 1
+            WHERE  CONSECUTIVO = V_CONSECUTIVO;              
+        END IF;
+    ELSE
+        IF (:new.INDICADOR_REGLAMENTO IS NULL AND :OLD.INDICADOR_REGLAMENTO IS NOT NULL) THEN
+            UPDATE A_HORARIO_HORIZONTAL
+            SET    CUPO_UTILIZADO = CUPO_UTILIZADO + 1
+            WHERE  CONSECUTIVO = V_CONSECUTIVO;
+        ELSIF (:OLD.INDICADOR_REGLAMENTO IS NULL AND :NEW.INDICADOR_REGLAMENTO IS NOT NULL) THEN
+            UPDATE A_HORARIO_HORIZONTAL
+            SET    CUPO_UTILIZADO = CUPO_UTILIZADO - 1
+            WHERE  CONSECUTIVO = V_CONSECUTIVO;
+        END IF;
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        V_NUMEROERROR   := SQLCODE;
+        V_TEXTOERROR    := SUBSTR (SQLERRM, 1, 200);
+        INSERT INTO B_LOG (CODIGO, 
+                           MENSAJE, 
+                           INFORMACION) 
+        VALUES (V_NUMEROERROR, 
+                V_TEXTOERROR, 
+                   'Error en AumentarCupo con la materia ' 
+                || :OLD.MATERIA_CURSAR 
+                || ' facultad ' 
+                || :OLD.FACULTAD_CURSAR 
+                || ' grupo ' 
+                || :OLD.GRUPO 
+                || ' ' 
+                || TO_CHAR (SYSDATE, 'DD-MON-YY HH24:MI:SS'));
+END AUMENTARCUPO;

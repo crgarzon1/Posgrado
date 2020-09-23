@@ -1,0 +1,781 @@
+{
+  "prematricula": {
+    "codFacultad": "81",
+    "nombreFacultad": "MAESTRIA EN ADMINISTRACION",
+    "jornadaFacultad": "N",
+    "materias": [
+      {
+        "codMateria": "FLR09",
+        "semestre": 1,
+        "creditos": 2,
+        "intencidadHoraria": 32,
+        "post": 0,
+        "propia": 1,
+        "nombreMateria": "LABORATORIO LASALLISTA",
+        "indicador": "P",
+        "notas": {
+          "definitiva": "3,5"
+        },
+        "fallas": {
+          "fallasTotales": null,
+          "perdidaPorFallas": "0"
+        },
+        "grupos": [{}]
+      },
+      {
+        "codMateria": "MBR10",
+        "semestre": 1,
+        "creditos": 3,
+        "intencidadHoraria": 36,
+        "post": 0,
+        "propia": 1,
+        "nombreMateria": "ANALISIS ECONOMICO DE LA ORGANIZACI",
+        "indicador": "P",
+        "notas": {
+          "definitiva": "4,7"
+        },
+        "fallas": {
+          "fallasTotales": null,
+          "perdidaPorFallas": "0"
+        },
+        "grupos": [{}]
+      },
+      {
+        "codMateria": "MBR11",
+        "semestre": 1,
+        "creditos": 3,
+        "intencidadHoraria": 36,
+        "post": 0,
+        "propia": 1,
+        "nombreMateria": "METODOS CUANTITATIVOS PARA TOMA D.",
+        "indicador": "P",
+        "notas": {
+          "definitiva": "3,5"
+        },
+        "fallas": {
+          "fallasTotales": null,
+          "perdidaPorFallas": "0"
+        },
+        "grupos": [{}]
+      },
+      {
+        "codMateria": "MBR12",
+        "semestre": 1,
+        "creditos": 2,
+        "intencidadHoraria": 24,
+        "post": 0,
+        "propia": 1,
+        "nombreMateria": "ANALISIS Y GESTION DE LAS ORGANIZ.",
+        "indicador": "P",
+        "notas": {
+          "definitiva": "2,0"
+        },
+        "fallas": {
+          "fallasTotales": null,
+          "perdidaPorFallas": "0"
+        },
+        "grupos": [{}]
+      },
+      {
+        "codMateria": "MBR13",
+        "semestre": 1,
+        "creditos": 3,
+        "intencidadHoraria": 36,
+        "post": 0,
+        "propia": 1,
+        "nombreMateria": "DESARROLLO HUMANO INTEG. Y SUSTENT.",
+        "indicador": "P",
+        "notas": {
+          "definitiva": null
+        },
+        "fallas": {
+          "fallasTotales": null,
+          "perdidaPorFallas": "0"
+        },
+        "grupos": [{}]
+      }
+    ]
+  },
+  "getEstudiante": {
+    "codigo": "123456789",
+    "nombre": "TRINIÑO TULIO",
+    "cingreso": "20151",
+    "facultad": "41",
+    "jornada": "D",
+    "foto": "http://zeus.lasalle.edu.co/fotos/estudiantes/150123121641266-41151364.jpg",
+    "ciclo": "20191",
+    "nombrePrograma": "Ingenieria de Sistemas",
+    "correo": "tulio123@gmail.com"
+  },
+  "getPendientes": {
+    "financiera": 0,
+    "biblioteca": 1,
+    "documentos": 1
+  },
+  "getMaterias": [
+    {
+      "codMateria": "AMR12",
+      "semestre": "6",
+      "creditos": "4",
+      "docente": "Maria Lopez",
+      "nombreMateria": "ESTUDIOS DE CALIDAD",
+      "grupos": [
+        {
+          "materiaCursar": {
+            "codMateria": "AMR12",
+            "nombreMateria": "ESTUDIOS DE CALIDAD"
+          },
+          "grupo": "2",
+          "horario": [
+            {
+              "idDia": "0",
+              "dia": "Lunes",
+              "hora": [
+                {
+                  "inicio": "09:00",
+                  "fin": "11:00",
+                  "salon": "501E",
+                  "sede": "Chapinero"
+                }
+              ]
+            },
+            {
+              "idDia": "3",
+              "dia": "Jueves",
+              "hora": [
+                {
+                  "inicio": "07:00",
+                  "fin": "09:00",
+                  "salon": "501E",
+                  "sede": "Chapinero"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notas": {
+        "definitiva": "1.5",
+        "primerCorte": "4.2",
+        "segundoCorte": "0",
+        "tercerCorte": "0"
+      },
+      "fallas": {
+        "primerCorte": "0",
+        "segundoCorte": "0",
+        "tercerCorte": "0",
+        "fallasTotales": "0",
+        "perdidaPorFallas": "0"
+      },
+      "planDeEstudiosActual": "1"
+    },
+    {
+      "codMateria": "AMR21",
+      "semestre": "8",
+      "creditos": "3",
+      "docente": "Maria Lopez",
+      "nombreMateria": "IMPACTO AMBIENTAL",
+      "grupos": [
+        {
+          "materiaCursar": {
+            "codMateria": "AMR21",
+            "nombreMateria": "IMPACTO AMBIENTAL"
+          },
+          "grupo": "2",
+          "horario": [
+            {
+              "idDia": "0",
+              "dia": "Lunes",
+              "hora": [
+                {
+                  "inicio": "08:00",
+                  "fin": "09:00",
+                  "salon": "604D",
+                  "sede": "Chapinero"
+                }
+              ]
+            },
+            {
+              "idDia": "3",
+              "dia": "Jueves",
+              "hora": [
+                {
+                  "inicio": "09:00",
+                  "fin": "11:00",
+                  "salon": "607D",
+                  "sede": "Chapinero"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notas": {
+        "definitiva": "0.8"
+      },
+      "fallas": {
+        "fallasTotales": "6",
+        "perdidaPorFallas": "0"
+      },
+      "planDeEstudiosActual": "1"
+    },
+    {
+      "codMateria": "AMR23",
+      "semestre": "8",
+      "creditos": "3",
+      "docente": "Maria Lopez",
+      "nombreMateria": "ELECTIVA DISCIPLINAR II",
+      "grupos": [
+        {
+          "materiaCursar": {
+            "codMateria": "41131",
+            "nombreMateria": "WASTEWATER TREATMENT PLANTS"
+          },
+          "grupo": "1",
+          "horario": [
+            {
+              "idDia": "2",
+              "dia": "Miercoles",
+              "hora": [
+                {
+                  "inicio": "07:00",
+                  "fin": "10:00",
+                  "salon": "404C",
+                  "sede": "Chapinero"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notas": {
+        "definitiva": "1.3",
+        "primerCorte": "3.7",
+        "segundoCorte": "0",
+        "tercerCorte": "0"
+      },
+      "fallas": {
+        "primerCorte": "0",
+        "segundoCorte": "0",
+        "tercerCorte": "0",
+        "fallasTotales": "0",
+        "perdidaPorFallas": "0"
+      },
+      "planDeEstudiosActual": "1"
+    },
+    {
+      "codMateria": "AMR28",
+      "semestre": "9",
+      "creditos": "3",
+      "docente": "Maria Lopez",
+      "nombreMateria": "ING. DE PROYECTOS Y DESARROLLO",
+      "grupos": [
+        {
+          "materiaCursar": {
+            "codMateria": "AMR28",
+            "nombreMateria": "ING. DE PROYECTOS Y DESARROLLO"
+          },
+          "grupo": "1",
+          "horario": [
+            {
+              "idDia": "4",
+              "dia": "Viernes",
+              "hora": [
+                {
+                  "inicio": "07:00",
+                  "fin": "10:00",
+                  "salon": "303A",
+                  "sede": "Chapinero"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notas": {
+        "definitiva": "1.3"
+      },
+      "fallas": {
+        "fallasTotales": "0",
+        "perdidaPorFallas": "0"
+      },
+      "planDeEstudiosActual": "1"
+    },
+    {
+      "codMateria": "AMR36",
+      "semestre": "10",
+      "creditos": "3",
+      "docente": "Maria Lopez",
+      "nombreMateria": "ANALISIS DE PROCESOS",
+      "grupos": [
+        {
+          "materiaCursar": {
+            "codMateria": "AMR36",
+            "nombreMateria": "ANALISIS DE PROCESOS"
+          },
+          "grupo": "1",
+          "horario": [
+            {
+              "idDia": "3",
+              "dia": "Jueves",
+              "hora": [
+                {
+                  "inicio": "15:00",
+                  "fin": "17:00",
+                  "salon": "507B",
+                  "sede": "Chapinero"
+                }
+              ]
+            },
+            {
+              "idDia": "4",
+              "dia": "Viernes",
+              "hora": [
+                {
+                  "inicio": "14:00",
+                  "fin": "15:00",
+                  "salon": "506B",
+                  "sede": "Chapinero"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notas": {
+        "definitiva": "1.2"
+      },
+      "fallas": {
+        "fallasTotales": "0",
+        "perdidaPorFallas": "0"
+      },
+      "planDeEstudiosActual": "1"
+    },
+    {
+      "codMateria": "ICR16",
+      "semestre": "7",
+      "creditos": "3",
+      "docente": "Maria Lopez",
+      "nombreMateria": "HIDRAULICA II",
+      "grupos": [
+        {
+          "materiaCursar": {
+            "codMateria": "ICA21",
+            "nombreMateria": "HIDRAULICA II"
+          },
+          "grupo": "2",
+          "horario": [
+            {
+              "idDia": "0",
+              "dia": "Lunes",
+              "hora": [
+                {
+                  "inicio": "14:00",
+                  "fin": "16:00",
+                  "salon": "501B",
+                  "sede": "Chapinero"
+                }
+              ]
+            },
+            {
+              "idDia": "4",
+              "dia": "Viernes",
+              "hora": [
+                {
+                  "inicio": "11:00",
+                  "fin": "12:00",
+                  "salon": "404B",
+                  "sede": "Chapinero"
+                },
+                {
+                  "inicio": "15:00",
+                  "fin": "16:00",
+                  "salon": "",
+                  "sede": "Chapinero"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notas": {
+        "definitiva": "1.3",
+        "primerCorte": "3.6",
+        "segundoCorte": "0",
+        "tercerCorte": "0"
+      },
+      "fallas": {
+        "primerCorte": "0",
+        "segundoCorte": "0",
+        "tercerCorte": "0",
+        "fallasTotales": "0",
+        "perdidaPorFallas": "0"
+      },
+      "planDeEstudiosActual": "0"
+    }
+  ],
+  "inscribir": {
+    "status": "ok",
+    "mensaje": "ok"
+  },
+  "desinscribir": {
+    "status": "ok",
+    "mensaje": "ok"
+  },
+  "login": {
+    "status": "ok",
+    "mensaje": "WadsdeSDFs3231asdfsSDFSdf"
+  },
+  "menuUsuario": [
+    {
+      "label": "Carga Académica Ciclo Actual",
+      "urlRef": "http://registro.lasalle.edu.co/pls/cactualpos/captura_horario_postgrado_BAK?p_codfac=85&p_usuario=KCPK&p_clave=ONYG&p_tipo=85",
+      "typeId": "4",
+      "habilitado": "0",
+      "type": "URL parametrizable",
+      "params": [],
+      "items": []
+    },
+    {
+      "label": "Carga Académica Proximo Ciclo",
+      "urlRef": "http://registro.lasalle.edu.co/pls/postgrado/validar_f2_DECANO?p_usuario=KCPK&p_clave=ONYG&p_codigo=85&p_boton=x&p_tipo=1&p_codest=&p_opcion=crear_horario&p_facultad=XX",
+      "typeId": "4",
+      "type": "URL parametrizable",
+      "params": [],
+      "items": []
+    },
+    {
+      "label": "Listados",
+      "urlRef": "#",
+      "typeId": "5",
+      "type": "Sin accion",
+      "params": [],
+      "items": [
+        {
+          "label": "Planes de Estudio",
+          "urlRef": "http://registro.lasalle.edu.co/pls/postgrado/validar_f2_DECANO?p_usuario=KCPK&p_clave=ONYG&p_codigo=85&p_boton=x&p_tipo=1&p_codest=&p_opcion=planes&p_facultad=XX",
+          "typeId": "4",
+          "type": "URL parametrizable",
+          "params": [],
+          "items": []
+        },
+        {
+          "label": "Listado de Reintegros",
+          "urlRef": "http://registro.lasalle.edu.co/pls/postgrado/validar_f2_DECANO?p_usuario=KCPK&p_clave=ONYG&p_codigo=85&p_boton=x&p_tipo=1&p_codest=&p_opcion=lreintegros&p_facultad=XX",
+          "typeId": "4",
+          "type": "URL parametrizable",
+          "params": [],
+          "items": []
+        }
+      ]
+    },
+    {
+      "label": "Utilidades",
+      "urlRef": "#",
+      "typeId": "5",
+      "type": "Sin accion",
+      "params": [],
+      "items": [
+        {
+          "label": "Planes de Estudio",
+          "urlRef": "http://registro.lasalle.edu.co/pls/postgrado/validar_f2_DECANO?p_usuario=KCPK&p_clave=ONYG&p_codigo=85&p_boton=x&p_tipo=1&p_codest=&p_opcion=planes&p_facultad=XX",
+          "typeId": "4",
+          "type": "URL parametrizable",
+          "params": [],
+          "items": []
+        },
+        {
+          "label": "Imprimir Guia de Pago",
+          "urlRef": "#",
+          "typeId": "5",
+          "type": "URL parametrizable",
+          "params": [],
+          "items": [
+            {
+              "label": "Media Matricula",
+              "urlRef": "#",
+              "typeId": "4",
+              "type": "URL parametrizable",
+              "params": [],
+              "items": []
+            },
+            {
+              "label": "Matricula Completa",
+              "urlRef": "#",
+              "typeId": "4",
+              "type": "URL parametrizable",
+              "params": [],
+              "items": []
+            }
+          ]
+        },
+        {
+          "label": "Registrar Solicitudes de Reintegro",
+          "urlRef": "http://registro.lasalle.edu.co/pls/postgrado/validar_f2_DECANO?p_usuario=KCPK&p_clave=ONYG&p_codigo=85&p_boton=x&p_tipo=1&p_codest=DA122204&p_opcion=reintegros_extemporaneos&p_facultad=MY",
+          "typeId": "4",
+          "type": "URL parametrizable",
+          "params": [
+            {
+              "idParametro": 1,
+              "identifier": "Codigo Estudiantil",
+              "label": "p_codest"
+            }
+          ],
+          "items": []
+        },
+        {
+          "label": "Crear Materias",
+          "urlRef": "http://registro.lasalle.edu.co/pls/postgrado/validar_f2_DECANO?p_usuario=KCPK&p_clave=ONYG&p_codigo=85&p_boton=x&p_tipo=1&p_codest=&p_opcion=crearmat&p_facultad=XX",
+          "typeId": "4",
+          "type": "URL parametrizable",
+          "params": [],
+          "items": []
+        }
+      ]
+    }
+  ],
+  "getCodigoEstudiante": {
+    "status": "ok",
+    "mensaje": "24901002"
+  },
+  "getBolsaCreditosElectivos": [
+    {
+      "id": "1",
+      "nombre": "Bolsa de créditos electivos",
+      "asignaturasDisponibles": [
+        {
+          "materia": {
+            "codigo": "GMR11",
+            "semestre": "01",
+            "nombre": "METODOS CUANTI.PARA LA TOMA DECISI.",
+            "creditos": 2,
+            "facultad": {
+              "codigo": "83",
+              "jornada": "N",
+              "nombre": "ESP. EN GERENCIA DE MERCADEO",
+              "abreviatura": "ES.GER.MERCA",
+              "activa": "S",
+              "indicador": "S"
+            }
+          },
+          "grupos": [
+            {
+              "id": 74007,
+              "grupo": 1,
+              "abierto": "S",
+              "materia": {
+                "codigo": "GMR11",
+                "semestre": "01",
+                "nombre": "METODOS CUANTI.PARA LA TOMA DECISI.",
+                "creditos": 2
+              }
+            }
+          ]
+        },
+        {
+          "materia": {
+            "codigo": "MDR01",
+            "semestre": "01",
+            "nombre": "EPISTEM. E HISTORIA,DE.PEDAG.DOCE",
+            "creditos": 3,
+            "facultad": {
+              "codigo": "85",
+              "jornada": "N",
+              "nombre": "MAESTRIA EN DOCENCIA",
+              "abreviatura": "M.EN DOCENCIA",
+              "activa": "S",
+              "indicador": "S"
+            }
+          },
+          "grupos": [
+            {
+              "id": 73660,
+              "grupo": 1,
+              "abierto": "S",
+              "materia": {
+                "codigo": "MDR01",
+                "semestre": "01",
+                "nombre": "EPISTEM. E HISTORIA,DE.PEDAG.DOCE",
+                "creditos": 3
+              }
+            }
+          ]
+        },
+        {
+          "materia": {
+            "codigo": "MDR02",
+            "semestre": "01",
+            "nombre": "DOCENCIA Y EVALUACION DEL APRENDIZA",
+            "creditos": 2,
+            "facultad": {
+              "codigo": "85",
+              "jornada": "N",
+              "nombre": "MAESTRIA EN DOCENCIA",
+              "abreviatura": "M.EN DOCENCIA",
+              "activa": "S",
+              "indicador": "S"
+            }
+          },
+          "grupos": [
+            {
+              "id": 73694,
+              "grupo": 1,
+              "abierto": "S",
+              "materia": {
+                "codigo": "MDR02",
+                "semestre": "01",
+                "nombre": "DOCENCIA Y EVALUACION DEL APRENDIZA",
+                "creditos": 2
+              }
+            }
+          ]
+        },
+        {
+          "materia": {
+            "codigo": "MDR03",
+            "semestre": "01",
+            "nombre": "ELECTIVA DE FACULTAD",
+            "creditos": 3,
+            "facultad": {
+              "codigo": "85",
+              "jornada": "N",
+              "nombre": "MAESTRIA EN DOCENCIA",
+              "abreviatura": "M.EN DOCENCIA",
+              "activa": "S",
+              "indicador": "S"
+            }
+          },
+          "grupos": [
+            {
+              "id": 74199,
+              "grupo": 1,
+              "abierto": "S",
+              "materia": {
+                "codigo": "MDR03",
+                "semestre": "01",
+                "nombre": "ELECTIVA DE FACULTAD",
+                "creditos": 3
+              }
+            },
+            {
+              "id": 74264,
+              "grupo": 2,
+              "abierto": "S",
+              "materia": {
+                "codigo": "MDR03",
+                "semestre": "01",
+                "nombre": "ELECTIVA DE FACULTAD",
+                "creditos": 3
+              }
+            }
+          ]
+        },
+        {
+          "materia": {
+            "codigo": "MDP10",
+            "semestre": "01",
+            "nombre": "LENGUA E INTERCULTURALIDAD EN CONTEXTOS DE GLOBALIZACION",
+            "creditos": 3,
+            "facultad": {
+              "codigo": "MD",
+              "jornada": "N",
+              "nombre": "MAESTRIA EN DIDACTICA DE LAS LENGUAS",
+              "abreviatura": "MD",
+              "activa": "S",
+              "indicador": "S"
+            }
+          },
+          "grupos": [
+            {
+              "id": 73792,
+              "grupo": 1,
+              "abierto": "S",
+              "materia": {
+                "codigo": "MDP10",
+                "semestre": "01",
+                "nombre": "LENGUA E INTERCULTURALIDAD EN CONTEXTOS DE GLOBALIZACION",
+                "creditos": 3
+              }
+            }
+          ]
+        },
+        {
+          "materia": {
+            "codigo": "MDP11",
+            "semestre": "01",
+            "nombre": "CURRICULO Y GESTION EDUCATIVA",
+            "creditos": 3,
+            "facultad": {
+              "codigo": "MD",
+              "jornada": "N",
+              "nombre": "MAESTRIA EN DIDACTICA DE LAS LENGUAS",
+              "abreviatura": "MD",
+              "activa": "S",
+              "indicador": "S"
+            }
+          },
+          "grupos": [
+            {
+              "id": 73793,
+              "grupo": 1,
+              "abierto": "S",
+              "materia": {
+                "codigo": "MDP11",
+                "semestre": "01",
+                "nombre": "CURRICULO Y GESTION EDUCATIVA",
+                "creditos": 3
+              }
+            }
+          ]
+        },
+        {
+          "materia": {
+            "codigo": "MDP12",
+            "semestre": "01",
+            "nombre": "FUNDAMENTACION INVESTIGATIVA I",
+            "creditos": 4,
+            "facultad": {
+              "codigo": "MD",
+              "jornada": "N",
+              "nombre": "MAESTRIA EN DIDACTICA DE LAS LENGUAS",
+              "abreviatura": "MD",
+              "activa": "S",
+              "indicador": "S"
+            }
+          },
+          "grupos": [
+            {
+              "id": 73805,
+              "grupo": 1,
+              "abierto": "S",
+              "materia": {
+                "codigo": "MDP12",
+                "semestre": "01",
+                "nombre": "FUNDAMENTACION INVESTIGATIVA I",
+                "creditos": 4
+              }
+            },
+            {
+              "id": 73806,
+              "grupo": 2,
+              "abierto": "S",
+              "materia": {
+                "codigo": "MDP12",
+                "semestre": "01",
+                "nombre": "FUNDAMENTACION INVESTIGATIVA I",
+                "creditos": 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "getInfoUsuario": {
+    "nombre": "Carlos Jaime Cobaleda Cruzz",
+    "propiedades": [
+      { "key": "Programa", "value": "MAESTRÍA EN DOCENCIA" },
+      { "key": "Correo", "value": "carlos@gmail.com" }
+    ]
+  }
+}

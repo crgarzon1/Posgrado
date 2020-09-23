@@ -1,0 +1,18 @@
+<p-blockUI [target]="pnl" [blocked]="blocked">
+  <i
+    class="pi pi-lock"
+    style="position: absolute; top: 28%; left: 33%; font-size: 10em;"
+    [pTooltip]="stringHelper.getResource('tooltip-blockui')"
+    tooltipZIndex="99999"
+  ></i>
+</p-blockUI>
+<p-panel #pnl [header]="stringHelper.getResource('header-titulo')">
+  <div id="mis-notas" class="ui-g" style="min-height: 335px;" *ngIf="!blocked">
+    <div class="ui-g-12">
+      <p-chart type="horizontalBar" [data]="data" height="100%" [options]="options"></p-chart>
+    </div>
+  </div>
+  <div id="mis-notas" class="ui-g" style="min-height: 335px;" *ngIf="blocked">
+    <img src="assets/images/3.jpg" alt="block-ui" style="width: 100%; height: 100%; margin: auto;" />
+  </div>
+</p-panel>

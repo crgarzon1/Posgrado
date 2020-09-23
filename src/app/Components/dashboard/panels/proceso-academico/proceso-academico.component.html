@@ -1,0 +1,127 @@
+<p-blockUI [target]="pnl" [blocked]="blocked">
+  <i
+    class="pi pi-lock"
+    style="position: absolute; top: 28%; left: 33%; font-size: 10em;"
+    [pTooltip]="stringHelper.getResource('tooltip-blockui')"
+    tooltipZIndex="99999"
+  ></i>
+</p-blockUI>
+<p-panel #pnl [header]="stringHelper.getResource('header-titulo')">
+  <div id="mis-notas" class="ui-g" style="min-height: 335px;" *ngIf="blocked">
+    <img src="assets/images/4.jpg" alt="block-ui" style="width: 100%; height: 100%; margin: auto;" />
+  </div>
+  <div class="ui-g" style="min-height: 335px;" *ngIf="!blocked">
+    <div class="ui-g-3 ui-sm-12" style="position: relative; text-align: center;">
+      <br class="big-screen-only" />
+      <br class="big-screen-only" />
+      <br class="big-screen-only" />
+      <p style="font-size: 40px;">{{ porcentajeCompletitud }}<span style="font-size: 18px;">%</span></p>
+      <span style="font-size: 16px;"> {{ stringHelper.getResource('lbl-porcentaje-completitud') }} </span>
+      <i
+        class="pi pi-search-plus"
+        (click)="showDialog()"
+        style="font-size: 2em; position: absolute !important; bottom: 18px !important; left: 12px !important; cursor: pointer;"
+      ></i>
+    </div>
+    <div class="ui-g-9 ui-sm-12">
+      <p-chart type="line" [data]="data" height="100%" [options]="options"></p-chart>
+    </div>
+  </div>
+  <p-dialog
+    [header]="stringHelper.getResource('header-titulo')"
+    [(visible)]="display"
+    [responsive]="true"
+    [modal]="true"
+    [style]="{ width: '85%', minWidth: '85%' }"
+    appendTo="body"
+    [baseZIndex]="9999"
+  >
+    <div class="big-screen-only dialog-proc-acad">
+      <p-table [value]="tablaValores">
+        <ng-template pTemplate="header">
+          <tr>
+            <th *ngFor="let col of tablaTitulos">{{ col }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-materias>
+          <tr>
+            <td *ngFor="let materia of materias">
+              <div *ngIf="materia" style="min-height: 95px; position: relative;">
+                <div>
+                  {{ materia.nombre }} <br />
+                  <br />
+                  <b> {{ stringHelper.getResource('tbl-codigo') }}</b
+                  >: {{ materia.codigo }} <br />
+                  <b> {{ stringHelper.getResource('tbl-estado') }}</b
+                  >: {{ getEstado(materia.estado) }} <br />
+                  <span *ngIf="materia.estado == 1">
+                    <b> {{ stringHelper.getResource('tbl-nota') }}</b
+                    >: {{ materia.nota }} <br />
+                  </span>
+                  <b> {{ stringHelper.getResource('tbl-creditos') }}</b
+                  >: {{ materia.creditos }}
+                </div>
+                <div style="position: absolute; right: 1px; bottom: 1px;">
+                  <div [ngSwitch]="materia.estado" style="float: right;">
+                    <span *ngSwitchCase="1">
+                      <i
+                        class="pi pi-check"
+                        style="font-size: 2em; color: green;"
+                        [pTooltip]="stringHelper.getResource('tbl-aprobada')"
+                        tooltipZIndex="99999"
+                      ></i>
+                    </span>
+                    <span *ngSwitchCase="2">
+                      <i
+                        class="pi pi-calendar"
+                        style="font-size: 2em; color: blue;"
+                        [pTooltip]="stringHelper.getResource('tbl-cursando')"
+                        tooltipZIndex="99999"
+                      ></i>
+                    </span>
+                    <span *ngSwitchCase="3">
+                      <i
+                        class="pi pi-clock"
+                        style="font-size: 2em; color: gray;"
+                        [pTooltip]="stringHelper.getResource('tbl-pendiente')"
+                        tooltipZIndex="99999"
+                      ></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class="small-screen-only dialog-proc-acad" *ngIf="dataSource.procesoAcademico && dataSource.procesoAcademico.plan">
+      <div *ngFor="let ciclo of dataSource.procesoAcademico.plan; let i = index">
+        <div style="position: relative; text-align: center;">
+          <h2>{{ ciclo.semestreValorOrdinal }}</h2>
+        </div>
+        <p-table [value]="ciclo.materias" [responsive]="true">
+          <ng-template pTemplate="body" let-materia>
+            <tr>
+              <td>
+                <span class="ui-column-title">{{ stringHelper.getResource('tbl-codigo') }}</span> {{ materia.codigo }}
+              </td>
+              <td>
+                <span class="ui-column-title">{{ stringHelper.getResource('tbl-nombre') }}</span> {{ materia.nombre }}
+              </td>
+              <td>
+                <span class="ui-column-title">{{ stringHelper.getResource('tbl-estado') }}</span> {{ materia.estado }}
+              </td>
+              <td *ngIf="materia.estado == 1">
+                <span class="ui-column-title">{{ stringHelper.getResource('tbl-nota') }}</span> {{ materia.nota }}
+              </td>
+              <td>
+                <span class="ui-column-title">{{ stringHelper.getResource('tbl-creditos') }}</span> {{ materia.creditos }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </p-dialog>
+</p-panel>

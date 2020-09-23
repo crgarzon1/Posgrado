@@ -1,0 +1,226 @@
+<p-blockUI [target]="pnl" [blocked]="blocked">
+  <i
+    class="pi pi-lock"
+    style="position: absolute; top: 28%; left: 33%; font-size: 10em;"
+    [pTooltip]="stringHelper.getResource('tooltip-blockui')"
+    tooltipZIndex="99999"
+  ></i>
+</p-blockUI>
+<p-panel #pnl [header]="stringHelper.getResource('header-titulo')">
+  <div class="ui-g" style="min-height: 335px;" *ngIf="!blocked">
+    <div class="ui-sm-12" style="position: relative; text-align: left; height: 100%; min-height: 335px;">
+      <p-table [value]="materias" [scrollable]="true" scrollHeight="333px">
+        <ng-template pTemplate="body" let-materia>
+          <tr>
+            <div id="body-table">
+              <div class="ui-g">
+                <div class="ui-g-12 padding-3">
+                  <h3 style="margin-top: 0px;">{{ materia.nombre }}</h3>
+                </div>
+                <div class="ui-g-3 padding-3">
+                  <b>{{ stringHelper.getResource('lbl-codigo-curso') }}</b>
+                </div>
+                <div class="ui-g-3 padding-3">
+                  {{ materia.codigo ? materia.codigo : stringHelper.getResource('lbl-no-registra') }}
+                </div>
+                <div class="ui-g-3 padding-3">
+                  <b>{{ stringHelper.getResource('lbl-creditos') }}</b>
+                </div>
+                <div class="ui-g-3 padding-3 normal-padding-bottom">
+                  {{ materia.creditos ? materia.creditos : stringHelper.getResource('lbl-no-registra') }}
+                </div>
+                <!--<div class="ui-g-3  ui-sm-4 padding-3">
+                  <b>{{ stringHelper.getResource("lbl-docente") }}: </b>
+                </div>
+                <div class="ui-g-9  ui-sm-8 padding-3 normal-padding-bottom">
+                  {{ materia.docente ? materia.docente : stringHelper.getResource("lbl-no-registra") }}
+                </div>-->
+                <div class="ui-g-12 padding-3" *ngFor="let horario of materia.horario; let i = index">
+                  <div class="ui-g-3 ui-sm-12 no-padding-top-bottom no-padding-left">
+                    <b *ngIf="i % 2 === 0">
+                      {{ stringHelper.getResource('lbl-hoy') }}
+                    </b>
+                    <b *ngIf="i % 2 !== 0">
+                      {{ stringHelper.getResource('lbl-manana') }}
+                    </b>
+                  </div>
+                  <div class="ui-g-3 ui-sm-4 ui-sm-offset-1 no-padding-top-bottom">
+                    <b>{{ stringHelper.getResource('lbl-horario') }}:</b>
+                  </div>
+                  <div class="ui-g-6 ui-sm-7 no-padding-top-bottom">
+                    {{ horario.horario ? horario.horario : stringHelper.getResource('lbl-no-registra') }}
+                  </div>
+                  <div class="ui-g-3 ui-g-offset-3 ui-sm-4 ui-sm-offset-1 no-padding-top-bottom">
+                    <b>{{ stringHelper.getResource('lbl-salon') }}:</b>
+                  </div>
+                  <div class="ui-g-6 ui-sm-7 no-padding-top-bottom">
+                    {{ horario.salon ? horario.salon : stringHelper.getResource('lbl-no-registra') }}
+                  </div>
+                  <div class="ui-g-3 ui-g-offset-3 ui-sm-4 ui-sm-offset-1 no-padding-top-bottom">
+                    <b>{{ stringHelper.getResource('lbl-sede') }}:</b>
+                  </div>
+                  <div class="ui-g-6 ui-sm-7 no-padding-top-bottom">
+                    {{ horario.sede ? horario.sede : stringHelper.getResource('lbl-no-registra') }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </tr>
+        </ng-template>
+      </p-table>
+      <i
+        class="pi pi-list"
+        (click)="abrirMateriasInscritas()"
+        style="font-size: 2em; position: absolute !important; bottom: 18px !important; right: 57px !important; cursor: pointer;"
+      >
+      </i>
+      <i
+        class="pi pi-calendar"
+        (click)="showDialog()"
+        style="font-size: 2em; position: absolute !important; bottom: 18px !important; right: 20px !important; cursor: pointer;"
+      >
+      </i>
+    </div>
+  </div>
+  <div class="ui-g" style="min-height: 335px;" *ngIf="blocked">
+    <img src="assets/images/7.jpg" alt="block-ui" style="width: 100%; height: 100%; margin: auto;" />
+  </div>
+</p-panel>
+
+<p-dialog
+  [header]="stringHelper.getResource('lbl-horario')"
+  [modal]="true"
+  [responsive]="true"
+  [(visible)]="displayDialog"
+  [style]="{ width: '80%', minWidth: '80%' }"
+  appendTo="body"
+  [maximizable]="true"
+  [baseZIndex]="9999"
+>
+  <div class="big-screen-only-cursos" style="padding: 1%;">
+    <p-table [value]="fullHorario">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 8% !important; text-align: center;">{{ stringHelper.getResource('lbl-hora') }}</th>
+          <th>{{ stringHelper.getResource('lbl-lunes') }}</th>
+          <th>{{ stringHelper.getResource('lbl-martes') }}</th>
+          <th>{{ stringHelper.getResource('lbl-miercoles') }}</th>
+          <th>{{ stringHelper.getResource('lbl-jueves') }}</th>
+          <th>{{ stringHelper.getResource('lbl-viernes') }}</th>
+          <th>{{ stringHelper.getResource('lbl-sabado') }}</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-hor>
+        <tr>
+          <td [ngClass]="'columna-hora'">
+            <b>{{ hor.hora }}</b>
+          </td>
+          <td [ngClass]="hor.lunes ? 'data-fill' : null">{{ hor.lunes }}</td>
+          <td [ngClass]="hor.martes ? 'data-fill' : null">{{ hor.martes }}</td>
+          <td [ngClass]="hor.miercoles ? 'data-fill' : null">{{ hor.miercoles }}</td>
+          <td [ngClass]="hor.jueves ? 'data-fill' : null">{{ hor.jueves }}</td>
+          <td [ngClass]="hor.viernes ? 'data-fill' : null">{{ hor.viernes }}</td>
+          <td [ngClass]="hor.sabado ? 'data-fill' : null">{{ hor.sabado }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="small-screen-only-cursos">
+    <p-table [value]="miniHorario" [scrollable]="true">
+      <ng-template pTemplate="body" let-mini>
+        <tr>
+          <div style="padding-left: 3%;">
+            <div>
+              <h2>{{ mini.dia }}</h2>
+            </div>
+            <div *ngFor="let mat of mini.materias">
+              <div>
+                <span>{{ mat.nombre }}</span>
+              </div>
+              <div>
+                <b>{{ stringHelper.getResource('lbl-inicio') }}: </b>
+                <span>{{ mat.inicio }} - </span>
+                <b>{{ stringHelper.getResource('lbl-fin') }}: </b>
+                <span>{{ mat.fin }}</span>
+              </div>
+              <br />
+            </div>
+          </div>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="Materias inscritas"
+  [modal]="true"
+  [responsive]="true"
+  [(visible)]="displayMateriasInscritas"
+  [style]="{ width: '98%', minWidth: '98%' }"
+  appendTo="body"
+  [maximizable]="true"
+  [baseZIndex]="9999"
+>
+  <div style="padding: 1%; text-align: left;">
+    <p-table [value]="materias">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3% !important;">Sem</th>
+          <th style="width: 5% !important;">Cod Materia Plan</th>
+          <th style="width: 13% !important;">Materia Plan</th>
+          <th style="width: 3% !important;">Crs</th>
+          <th style="width: 3% !important;">I.h</th>
+
+          <th style="width: 7% !important;">Sede</th>
+          <th style="width: 17% !important;">Facultad Materia Cursar</th>
+          <th style="width: 5% !important;">Cod Materia Cursar</th>
+          <th style="width: 13% !important;">Materia Cursar</th>
+
+          <th style="width: 3% !important;">Gr.</th>
+          <th style="width: 4% !important;">Lun</th>
+          <th style="width: 4% !important;">Mar</th>
+          <th style="width: 4% !important;">Mie</th>
+          <th style="width: 4% !important;">Jue</th>
+          <th style="width: 4% !important;">Vie</th>
+          <th style="width: 4% !important;">Sab</th>
+          <th style="width: 4% !important;">Syl</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-mat>
+        <tr>
+          <td>{{ mat.semestre }}</td>
+          <td>{{ mat.codigo }}</td>
+          <td>{{ mat.nombre }}</td>
+          <td>{{ mat.creditos }}</td>
+          <td>{{ mat.intensidadHoraria }}</td>
+          <td>{{ mat.sede }}</td>
+          <td>{{ mat.facCursar }}</td>
+          <td>{{ mat.codMateriaCursar }}</td>
+          <td>{{ mat.materiaCursar }}</td>
+          <td>{{ mat.grupo }}</td>
+          <td>{{ mat.tiempoHorario.lun }}</td>
+          <td>{{ mat.tiempoHorario.mar }}</td>
+          <td>{{ mat.tiempoHorario.mie }}</td>
+          <td>{{ mat.tiempoHorario.jue }}</td>
+          <td>{{ mat.tiempoHorario.vie }}</td>
+          <td>{{ mat.tiempoHorario.sab }}</td>
+          <td (click)="openSyllabus(mat)" style="cursor: pointer; font-size: 5m;"><i class="pi pi-id-card"></i></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="Syllabus"
+  [(visible)]="openSyllabusBool"
+  [modal]="true"
+  [responsive]="true"
+  [style]="{ width: '80%', minWidth: '80%' }"
+  [maximizable]="true"
+  appendTo="body"
+  [baseZIndex]="999999"
+>
+  <iframe width="100%" style="min-height: 700px; height: 100%;" [src]="url | safe"></iframe>
+</p-dialog>

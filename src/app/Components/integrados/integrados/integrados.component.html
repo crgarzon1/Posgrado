@@ -1,0 +1,172 @@
+<p-toast [style]="{ marginTop: '80px' }"></p-toast>
+
+<p-confirmDialog acceptLabel="Si" rejectLabel="No" blockScroll="true" appendTo="body" baseZIndex="999999"></p-confirmDialog>
+
+<div class="ui-g">
+  <div class="ui-lg-12 ui-md-12 ui-sm-12">
+    <span [style]="{ margin: '0% 4% 0% 4%' }">
+      Programa: <b>{{ facultadEncargado ? facultadEncargado.nombre : 'Cargando...' }}</b>
+    </span>
+  </div>
+  <div class="ui-lg-8 ui-md-12 ui-sm-12">
+    <div class="ui-g">
+      <div class="ui-lg-6 ui-md-6 ui-sm-12">
+        <div
+          class="ui-lg-12"
+          id="headerPaneles"
+          [ngStyle]="{ 'background-color': getEstadoColor(0), 'border-color': getEstadoColor(0) }"
+        >
+          1. Planes facultad encargada
+        </div>
+        <p-card class="panel">
+          <div class="listas ui-lg-12 ui-md-12 ui-sm-12" style="min-height: 200px;">
+            <p-listbox
+              [options]="planesEncargado"
+              [(ngModel)]="planEncargado"
+              optionLabel="nombrePlan"
+              [listStyle]="{ height: '180px' }"
+              [style]="{ width: '100%' }"
+              (onChange)="onChangePlanesEncargado($event)"
+            ></p-listbox>
+          </div>
+        </p-card>
+      </div>
+      <div class="ui-lg-6 ui-md-6 ui-sm-12">
+        <div
+          class="ui-lg-12"
+          id="headerPaneles"
+          [ngStyle]="{ 'background-color': getEstadoColor(1), 'border-color': getEstadoColor(1) }"
+        >
+          2. Materias facultad encargada
+        </div>
+        <p-card>
+          <div class="listas ui-lg-12 ui-md-12 ui-sm-12" style="min-height: 200px;">
+            <p-listbox
+              [options]="materiasEncargado"
+              [(ngModel)]="materiaEncargado"
+              optionLabel="nombre"
+              filter="filter"
+              [listStyle]="{ height: '140px' }"
+              [style]="{ width: '100%' }"
+              (onChange)="onChangeMateriasEncargado($event)"
+              [disabled]="habilitarMateriasE"
+            ></p-listbox>
+          </div>
+        </p-card>
+      </div>
+      <div class="ui-lg-6 ui-md-6 ui-sm-12">
+        <div
+          class="ui-lg-12"
+          id="headerPaneles"
+          [ngStyle]="{ 'background-color': getEstadoColor(2), 'border-color': getEstadoColor(2) }"
+        >
+          3. Programa a integrar
+        </div>
+        <p-card>
+          <div class="listas ui-lg-12 ui-md-12 ui-sm-12" style="min-height: 200px;">
+            <p-listbox
+              [options]="facultadesIntegradas"
+              [(ngModel)]="facultadIntegrada"
+              optionLabel="nombre"
+              filter="filter"
+              [listStyle]="{ height: '140px' }"
+              [style]="{ width: '100%' }"
+              (onChange)="onChangeProgramaIntegrado($event)"
+              [disabled]="habilitarProgramasI"
+            ></p-listbox>
+          </div>
+        </p-card>
+      </div>
+      <div class="ui-lg-6 ui-md-6 ui-sm-12">
+        <div
+          class="ui-lg-12"
+          id="headerPaneles"
+          [ngStyle]="{ 'background-color': getEstadoColor(3), 'border-color': getEstadoColor(3) }"
+        >
+          4. Planes de programa a integrar
+        </div>
+        <p-card>
+          <div class="listas ui-lg-12 ui-md-12 ui-sm-12" style="min-height: 200px;">
+            <p-listbox
+              [options]="planesIntegrados"
+              [(ngModel)]="planIntegrado"
+              optionLabel="nombrePlan"
+              filter="filter"
+              [listStyle]="{ height: '140px' }"
+              [style]="{ width: '100%' }"
+              (onChange)="onChangePlanesIntegrado($event)"
+              [disabled]="habilitarPlanesI"
+            ></p-listbox>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-lg-4 ui-md-12 ui-sm-12">
+    <div class="ui-lg-12 ui-md-12 ui-sm-12">
+      <div
+        class="ui-lg-12"
+        id="headerPaneles"
+        [ngStyle]="{ 'background-color': getEstadoColor(4), 'border-color': getEstadoColor(4) }"
+      >
+        5. Materias de programa a integrar
+      </div>
+      <p-card>
+        <div class="listas ui-lg-12 ui-md-12 ui-sm-12" style="min-height: 455px;">
+          <p-listbox
+            [options]="materiasIntegrado"
+            [(ngModel)]="materiaIntegrada"
+            optionLabel="nombre"
+            filter="filter"
+            [style]="{ width: '100%' }"
+            [listStyle]="{ height: '382px' }"
+            (onChange)="onChangeMateriasIntegrado($event)"
+            [disabled]="habilitarMateriasI"
+            id="materiasIntegral"
+          ></p-listbox>
+        </div>
+      </p-card>
+    </div>
+  </div>
+  <div class="ui-lg-12 ui-md-12 ui-sm-12">
+    <!--div class="ui-lg-12" id="headerPaneles" style="background-color: #007ee6; border: #007ee6">
+			Materias integradas
+		</div-->
+    <p-panel #pnl header="Materias integradas">
+      <p-table [value]="materiasIntegradasActuales" id="grande" [responsive]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 24% !important;">Programa Integrado</th>
+            <th style="width: 21% !important;">Plan Integrado</th>
+            <th style="width: 24% !important;">Materia Integrada</th>
+            <th style="width: 7% !important;">Semestre</th>
+            <th style="width: 10% !important;">Código</th>
+            <th style="width: 7% !important;">Créditos</th>
+            <th style="width: 7% !important;">Eliminar</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-tab>
+          <tr>
+            <td><span class="ui-column-title">Programa Integrado: </span>{{ tab.programaIntegrado.nombre }}</td>
+            <td><span class="ui-column-title">Plan Integrado: </span>{{ tab.planIntegrado.plan }}</td>
+            <td><span class="ui-column-title">Materia Integrada: </span>{{ tab.materiaIntegrado.nombre }}</td>
+            <td><span class="ui-column-title">Semestre: </span>{{ tab.semestre }}</td>
+            <td><span class="ui-column-title">Código: </span>{{ tab.codigo }}</td>
+            <td><span class="ui-column-title">Créditos: </span>{{ tab.creditos }}</td>
+            <td>
+              <span class="ui-column-title">Eliminar: </span>
+              <i class="pi pi-trash trash" (click)="eliminar(tab)" style="font-size: 2em; color: 'red';"></i>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-panel>
+  </div>
+</div>
+
+<div class="ui-g-12 ui-md-12 progress" id="progress" *ngIf="progress">
+  <div class="spinner">
+    <p-progressSpinner [style]="{ width: '150px', height: '150px' }"></p-progressSpinner>
+  </div>
+</div>

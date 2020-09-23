@@ -1,0 +1,14 @@
+<div style="height: 700px; width: 100%;">
+  <div *ngIf="estudiante != null" style="font-size: 14px; margin: 0.5%;">
+    <b>Nombre estudiante: </b> {{ estudiante.nombre }} <b>Código: </b>
+    {{ estudiante.codigo }}
+  </div>
+  <app-oferta [observableMatricula]="obsMatricula" (showProgress)="changeShowProgress($event)"></app-oferta>
+  <app-creditos [observableMatricula]="obsMatricula"></app-creditos>
+  <app-matricula [observableMatricula]="obsMatricula" (showProgress)="changeShowProgress($event)"></app-matricula>
+</div>
+<div class="ui-g-12 ui-md-12 progress" id="progress" *ngIf="progress">
+  <div class="spinner">
+    <p-progressSpinner [style]="{ width: '150px', height: '150px' }"></p-progressSpinner>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<p-blockUI [target]="pnl" [blocked]="blocked">
+  <i
+    class="pi pi-lock"
+    style="position: absolute; top: 28%; left: 33%; font-size: 10em;"
+    [pTooltip]="stringHelper.getResource('tooltip-blockui')"
+    tooltipZIndex="99999"
+  ></i>
+</p-blockUI>
+<p-panel #pnl [header]="stringHelper.getResource('header-titulo')">
+  <div id="mis-notas" class="ui-g" style="min-height: 335px;" *ngIf="blocked">
+    <img src="assets/images/6.jpg" alt="block-ui" style="width: 100%; height: 100%; margin: auto;" />
+  </div>
+  <div class="ui-g" style="min-height: 335px;" *ngIf="!blocked">
+    <div class="ui-xl-4 ui-xl-offset-0 ui-lg-6 ui-md-6 ui-sm-6 ui-lg-offset-3 ui-md-offset-3 ui-sm-offset-3">
+      <div class="ui-fluid">
+        <p-button
+          [label]="stringHelper.getResource('btn-materias')"
+          style="width: 100%;"
+          styleClass="topButton"
+          [disabled]="mostrarMaterias"
+          (onClick)="cambiarTipoDatoChart($event)"
+        ></p-button>
+        <p-button
+          [label]="stringHelper.getResource('btn-creditos')"
+          style="width: 100%;"
+          styleClass="bottomButton"
+          [disabled]="!mostrarMaterias"
+          (onClick)="cambiarTipoDatoChart($event)"
+        ></p-button>
+        <br /><br />
+        <span>
+          <b>{{ labelTotal }}</b>
+        </span>
+      </div>
+    </div>
+    <div class="ui-xl-8 ui-lg-12 ui-md-12 ui-sm-12">
+      <p-chart type="doughnut" [data]="chartData" height="100%" responsive="true" [options]="options"></p-chart>
+    </div>
+  </div>
+</p-panel>

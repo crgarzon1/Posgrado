@@ -1,0 +1,356 @@
+<p-toast [style]="{ marginTop: '80px' }" position="top-center" baseZIndex="99999"></p-toast>
+<p-toast [style]="{ marginTop: '80px' }" position="top-center" key="guias" baseZIndex="99999"></p-toast>
+
+<p-confirmDialog baseZIndex="1000000"></p-confirmDialog>
+
+<div id="bodyMain">
+  <div class="big-screen-only-main-component">
+    <p-toolbar>
+      <div class="ui-toolbar-group-left" style="margin-left: 5px;">
+        <img src="assets/images/logousalle.png" alt="Logo U Salle" width="160px" />
+        <!-- <p *ngIf="externo">
+					<img src="assets/images/star.png" alt="Logo U Salle" height="20.5px" *ngIf="!logo"
+						style="position: absolute;" />
+					<span style="margin-left: 25px;"><b>PERFIL:</b> {{ labelPerfil }}</span>
+				</p> -->
+      </div>
+      <div class="ui-toolbar-group-left" style="margin: 7px 0px 0px 50px;" *ngIf="unidadAcademica">
+        <div class="ui-inputgroup" style="position: inherit;">
+          <p-autoComplete
+            [(ngModel)]="estudianteBusqueda"
+            [suggestions]="estudiantesBusqueda"
+            (completeMethod)="filterEstudiantes($event)"
+            [size]="30"
+            field="nombreCompuesto"
+            placeholder="Buscar estudiante"
+            [minLength]="3"
+            type="search"
+            emptyMessage="El usuario no existe o no cumple con los criterios de busqueda"
+            (onSelect)="doOnSelect($event)"
+            (onKeyUp)="verificarMaximo($event)"
+            pTooltip="Únicamente seran visibles los 10 primeros usuarios compatibles con los criterios"
+            tooltipZIndex="100"
+          ></p-autoComplete>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-search"
+            class="ui-button-warn"
+            (click)="buscarEstudiante()"
+            [disabled]="disableBusquedaEstudiante"
+          ></button>
+        </div>
+      </div>
+      <div class="ui-toolbar-group-right">
+        <p-menubar [model]="itemsMenu" [autoDisplay]="false"></p-menubar>
+      </div>
+    </p-toolbar>
+  </div>
+
+  <div class="small-screen-only-main-component">
+    <p-toolbar>
+      <div class="ui-toolbar-group-left" style="margin: 8px 0px 0px 5px;">
+        <i class="pi pi-list" (click)="displayBarSide()" style="font-size: 2em; cursor: pointer !important;"></i>
+      </div>
+      <div class="ui-toolbar-group-left" style="margin-left: calc(50% - 115px);">
+        <img src="assets/images/logousalle.png" alt="Logo U Salle" width="160px" />
+      </div>
+      <div class="ui-toolbar-group-right" style="margin: 7px 5px 0px 0px;" *ngIf="unidadAcademica">
+        <i
+          *ngIf="!displaySearchEst"
+          class="pi pi-search"
+          (click)="displaySearch()"
+          style="font-size: 2em; cursor: pointer !important;"
+        ></i>
+        <i
+          *ngIf="displaySearchEst"
+          class="pi pi-times"
+          (click)="displaySearch()"
+          style="font-size: 2em; cursor: pointer !important;"
+        ></i>
+      </div>
+    </p-toolbar>
+  </div>
+
+  <!-- <div class="ui-g" style="height: 65px;">
+		<div class="ui-lg-4 ui-md-4 ui-sm-12" dir="ltr">
+			<span class="altura-fija"><b>BIENVENIDO</b> {{ nombre | titlecase }}</span>
+		</div>
+		<div class="ui-lg-4 ui-md-4 ui-sm-12" style="text-align: center;">
+			<span class="altura-fija" *ngIf="programa"> <b>PROGRAMA</b> {{ programa | titlecase }} </span>
+		</div>
+		<div class="ui-lg-4 ui-md-4 ui-sm-12" dir="rtl">
+			<span class="altura-fija"><b>PERFIL ACTUAL </b>{{ cargo }}</span>
+		</div>
+	</div> -->
+
+  <div *ngIf="unidadAcademica">
+    <app-main-ua></app-main-ua>
+  </div>
+  <div *ngIf="estudiante">
+    <app-main-dashboard></app-main-dashboard>
+  </div>
+  <div *ngIf="externo" style="width: 100%; height: 100%;">
+    <iframe
+      style="
+        position: fixed;
+        top: 140.6px;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: calc(100% - 15px);
+        height: calc(100% - 84.6px);
+        border: none;
+        margin: 0px 8px;
+      "
+      [src]="urlExt | safe"
+    ></iframe>
+  </div>
+</div>
+
+<!--Side bar menuItems (Izquierda)-->
+<p-sidebar
+  [(visible)]="displaySideBar"
+  class="layout-sidebar"
+  [style]="{ top: '79px', width: '100%', height: '300px' }"
+  [blockScroll]="true"
+  [showCloseIcon]="false"
+>
+  <p-slideMenu
+    [model]="itemsMenu"
+    [style]="{ width: '100%', height: '100%' }"
+    [baseZIndex]="999"
+    [menuWidth]="385"
+    [viewportHeight]="280"
+    backLabel="Volver"
+  ></p-slideMenu>
+</p-sidebar>
+
+<!--Side bar busqueda estudiante (Derecha)-->
+<p-sidebar
+  [(visible)]="displaySearchEst"
+  class="layout-sidebar"
+  [style]="{ top: '79px', width: '100%', height: '50px' }"
+  [blockScroll]="true"
+  [showCloseIcon]="false"
+  position="right"
+>
+  <div class="ui-inputgroup input">
+    <p-autoComplete
+      class="input"
+      [(ngModel)]="estudianteBusqueda"
+      [suggestions]="estudiantesBusqueda"
+      (completeMethod)="filterEstudiantes($event)"
+      field="nombre"
+      placeholder="Buscar estudiante"
+      [minLength]="3"
+      [size]="50"
+      type="search"
+      emptyMessage="El usuario no existe o no cumple con los criterios de busqueda"
+      (onSelect)="doOnSelect($event)"
+      (onKeyUp)="verificarMaximo($event)"
+    ></p-autoComplete>
+    <button
+      pButton
+      type="button"
+      icon="pi pi-search"
+      class="ui-button-warn"
+      (click)="buscarEstudiante()"
+      [disabled]="disableBusquedaEstudiante"
+    ></button>
+  </div>
+</p-sidebar>
+
+<!--Pop-up con distintas ventanas-->
+<p-dialog
+  header="{{ tituloModal }}"
+  [(visible)]="display"
+  [modal]="true"
+  [responsive]="true"
+  [style]="{ width: '80%', minWidth: '80%', maxHeight: '700px' }"
+  [maximizable]="true"
+  [baseZIndex]="10000"
+  positionTop="1%"
+>
+  <div [ngSwitch]="ventana" class="content-dialog-pop" style="height: 100%;">
+    <iframe width="100%" style="min-height: 700px; height: 100%;" [src]="url | safe" *ngSwitchCase="'url'"></iframe>
+    <app-integrados *ngSwitchCase="'integrados'"></app-integrados>
+    <app-main-matricula *ngSwitchCase="'matricula'" [estudiante]="estudiantePrematricula"></app-main-matricula>
+    <app-creditos-adicionales *ngSwitchCase="'creditosAdicionales'"></app-creditos-adicionales>
+  </div>
+</p-dialog>
+
+<!--Pop-up con dashboard-->
+<p-dialog
+  header="Dashboard estudiante"
+  [(visible)]="dashboard"
+  [modal]="true"
+  [blockScroll]="true"
+  [responsive]="true"
+  [style]="{ width: '80%', minWidth: '80%' }"
+  [maximizable]="true"
+  [baseZIndex]="10001"
+>
+  <app-main-dashboard *ngIf="dashboard"></app-main-dashboard>
+</p-dialog>
+
+<!-- Pop-up Access Point para solicitar parametros -->
+<p-dialog
+  header="{{ tituloModal }}"
+  [(visible)]="displayAccessPoint"
+  [modal]="true"
+  [blockScroll]="true"
+  [responsive]="true"
+  [style]="{ width: '40%', minWidth: '40%' }"
+  [maximizable]="true"
+  [baseZIndex]="100000"
+>
+  <div style="width: 80%; margin: auto;">
+    <div style="width: 100%;">
+      <h3>Ingrese los datos solicitados:</h3>
+    </div>
+    <div *ngFor="let param of paramsAccessPoint; let i = index">
+      <input
+        type="text"
+        pInputText
+        placeholder="{{ param.label }}"
+        style="width: 100%; margin-bottom: 3%;"
+        [(ngModel)]="paramsAccessFill[i].value"
+        autocomplete="off"
+      />
+    </div>
+    <br />
+    <div style="width: 80%; margin: auto;">
+      <button pButton type="button" label="Enviar" style="width: 100%;" (click)="displayModalAccessPoint()"></button>
+    </div>
+    <br />
+  </div>
+</p-dialog>
+
+<!--Pop-up para solicitar parametro de prematricula-->
+<p-dialog
+  header="Codigo Estudiante"
+  [(visible)]="displayCodigoPrematricula"
+  [modal]="true"
+  [blockScroll]="true"
+  [responsive]="true"
+  [style]="{ width: '25%', minWidth: '25%' }"
+  [maximizable]="true"
+>
+  <div style="width: 80%; margin: auto;">
+    <div style="width: 100%;">
+      <h3>Ingrese los datos solicitados:</h3>
+    </div>
+    <div>
+      <input
+        type="text"
+        pInputText
+        placeholder="Código de estudiante"
+        style="width: 100%; margin-bottom: 3%;"
+        [(ngModel)]="codigoEstudiante"
+        autocomplete="off"
+        (keydown.enter)="buscarEstPrem($event)"
+      />
+    </div>
+    <br />
+    <div style="width: 80%; margin: auto;">
+      <button pButton type="button" label="Enviar" style="width: 100%;" (click)="displayModalPrematricula()"></button>
+    </div>
+    <br />
+  </div>
+</p-dialog>
+
+<!--Pop-up para solicitar parametro de Consulta General -->
+<p-dialog
+  header="Codigo Estudiante"
+  [(visible)]="displayCodigoConsultaGeneral"
+  [modal]="true"
+  [blockScroll]="true"
+  [responsive]="true"
+  [style]="{ width: '25%', minWidth: '25%' }"
+  [maximizable]="true"
+>
+  <div style="width: 80%; margin: auto;">
+    <div style="width: 100%;">
+      <h3>Ingrese los datos solicitados:</h3>
+    </div>
+    <div>
+      <input
+        type="text"
+        pInputText
+        placeholder="Código de estudiante"
+        style="width: 100%; margin-bottom: 3%;"
+        [(ngModel)]="codigoEstudianteConsultaGeneral"
+        autocomplete="off"
+        (keydown.enter)="buscarEstConsGeneral($event)"
+      />
+    </div>
+    <br />
+    <div style="width: 80%; margin: auto;">
+      <button pButton type="button" label="Enviar" style="width: 100%;" (click)="displayConsultaGeneral()"></button>
+    </div>
+    <br />
+  </div>
+</p-dialog>
+
+<!--Pop-up para solicitar parametro de Guia de pago-->
+<p-dialog
+  header="Generar Guia de pago"
+  [(visible)]="displayCodigoGuiaPago"
+  [modal]="true"
+  [blockScroll]="true"
+  [responsive]="true"
+  [style]="{ width: '25%', minWidth: '25%' }"
+  [maximizable]="true"
+>
+  <div style="width: 80%; margin: auto;">
+    <div style="width: 100%;" *ngIf="unidadAcademica">
+      <div style="width: 100%;">
+        <h3>Ingrese los datos solicitados:</h3>
+      </div>
+      <div class="ui-inputgroup" style="width: 100%;">
+        <input
+          type="text"
+          pInputText
+          placeholder="Codigo Estudiante"
+          [(ngModel)]="codigoEstudiante"
+          style="width: 100%;"
+          autocomplete="off"
+          (keydown.enter)="buscarEstGuia($event)"
+        />
+        <button pButton type="button" (click)="displayGuiaPago()" label="Buscar"></button>
+      </div>
+    </div>
+    <br />
+    <div *ngIf="cargaPeriodos" style="width: 100%;">
+      <h3>Seleccione la guía que desea pagar</h3>
+      <p-listbox
+        [options]="periodosGuia.periodos"
+        [(ngModel)]="periodoSelected"
+        optionLabel="periodo"
+        [style]="{ width: '100%' }"
+        (onClick)="seleccionGuia()"
+      ></p-listbox>
+      <br />
+      <div style="width: 80%; margin: auto;">
+        <button
+          pButton
+          type="button"
+          [label]="generarGuia"
+          style="width: 100%;"
+          (click)="openGuia()"
+          [disabled]="buttonGuiaDisabled"
+        ></button>
+      </div>
+    </div>
+    <br />
+  </div>
+</p-dialog>
+
+<div class="ui-g-12 ui-md-12 progress" id="progress" *ngIf="progress">
+  <div class="spinner">
+    <p-progressSpinner [style]="{ width: '150px', height: '150px' }"></p-progressSpinner>
+  </div>
+</div>
+
+<p-confirmDialog key="cookieDialog" closeOnEscape="false" [closable]="false" baseZIndex="99999999"></p-confirmDialog>

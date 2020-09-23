@@ -1,0 +1,98 @@
+
+SELECT CODIGO, PKG_LIQUIDACION.GET_DESCUENTO(CODIGO) FROM B_ESTUDIANTES WHERE PKG_LIQUIDACION.GET_DESCUENTO(CODIGO) IS NOT NULL;
+
+DROP TRIGGER CTI_DESCUENTO_TRG;
+DROP TABLE CTI_DESCUENTO;
+DROP SEQUENCE CTI_DESCUENTO_SEQ;
+
+CREATE SEQUENCE CTI_DESCUENTO_SEQ START WITH 1;
+
+CREATE TABLE CTI_DESCUENTO(
+    ID_DESCUENTO NUMBER PRIMARY KEY,
+    DESCRIPCION VARCHAR2(2000) NOT NULL,
+    ID_PERIODO NUMBER NOT NULL,
+    CODIGO_DE_TRANSACCION NUMBER NOT NULL,
+    OPERACION VARCHAR2(200) NOT NULL,
+    PRIORIDAD NUMBER NOT NULL,
+    CONSTRAINT FK_ID_PERIODO FOREIGN KEY (ID_PERIODO) REFERENCES CTI_PERIODO(ID_PERIODO),
+    CONSTRAINT PRIORIDAD_UC UNIQUE (PRIORIDAD),
+    CONSTRAINT PRIORIDAD_CHECK CHECK (PRIORIDAD >= 1)
+);
+
+CREATE TRIGGER CTI_DESCUENTO_TRG 
+BEFORE INSERT ON CTI_DESCUENTO 
+FOR EACH ROW
+BEGIN
+  SELECT CTI_DESCUENTO_SEQ.NEXTVAL
+  INTO   :NEW.ID_DESCUENTO
+  FROM   DUAL;
+END;
+/
+
+INSERT INTO CTI_DESCUENTO(DESCRIPCION, ID_PERIODO, CODIGO_DE_TRANSACCION, OPERACION, PRIORIDAD) VALUES('Descuento aplicado a estudiantes egresados de un programa de pregrado nuevos', 0, 63, 'PKG_DESCUENTOS.ES_EGRESADO_NUEVO', 10);
+INSERT INTO CTI_DESCUENTO(DESCRIPCION, ID_PERIODO, CODIGO_DE_TRANSACCION, OPERACION, PRIORIDAD) VALUES('Descuento aplicado a estudiantes egresados de un programa de pregrado antiguos', 0, 64, 'PKG_DESCUENTOS.ES_EGRESADO_ANTIGUO', 20);
+
+CREATE OR REPLACE PACKAGE PKG_DESCUENTOS AS
+    FUNCTION ES_EGRESADO_NUEVO (
+        P_CODIGO_ESTUDIANTE VARCHAR2
+    ) RETURN NUMBER;
+    
+    FUNCTION ES_EGRESADO_ANTIGUO (
+        P_CODIGO_ESTUDIANTE VARCHAR2
+    ) RETURN NUMBER;
+END PKG_DESCUENTOS;
+/
+
+create or replace PACKAGE BODY PKG_DESCUENTOS AS
+    FUNCTION ES_EGRESADO_NUEVO (
+        P_CODIGO_ESTUDIANTE VARCHAR2
+    ) RETURN NUMBER IS
+        P_ES_GRADUADO NUMBER;
+        v_codigo b_estudiantes.codigo%type;
+        v_numdoc datos_personales.numero_documento%type;
+    BEGIN
+        select e.codigo, dp.numero_documento
+        into v_codigo, v_numdoc
+        from b_estudiantes e
+        inner join
+        datos_personales dp
+        on e.codigo = dp.codigo_estudiante
+        where e.codigo = P_CODIGO_ESTUDIANTE
+        union
+        select a.cod_def, a.numdoc
+        from a_aspirantes a
+        where a.cod_def = P_CODIGO_ESTUDIANTE;
+        --------------------------------------
+        if ADMISIONES.PKG_UTILS.ESNUEVO(v_codigo)=1 and ADMISIONES.PKG_INSCRIPCIONES.FNC_ES_GRADUADO(v_numdoc) = 'SI' then
+            return 1;
+        end if;
+        return 0;
+    END;
+
+    FUNCTION ES_EGRESADO_ANTIGUO (
+        P_CODIGO_ESTUDIANTE VARCHAR2
+    ) RETURN NUMBER IS
+        P_ES_GRADUADO NUMBER;
+    BEGIN
+        SELECT DISTINCT COUNT(1)
+        INTO            P_ES_GRADUADO
+        FROM            (SELECT CODIGO_ESTUDIANTE,
+                                NUMERO_DOCUMENTO
+                         FROM   ADMISIONES.DATOS_PERSONALES
+                         UNION
+                         SELECT CODIGO_ESTUDIANTE,
+                                NUMERO_DOCUMENTO
+                         FROM   POSTGRADO.DATOS_PERSONALES) A
+        INNER JOIN       B_ESTUDIANTES E ON E.CODIGO = A.CODIGO_ESTUDIANTE
+        WHERE               CODIGO_ESTUDIANTE = P_CODIGO_ESTUDIANTE
+                        AND ADMISIONES.PKG_INSCRIPCIONES.FNC_ES_GRADUADO(NUMERO_DOCUMENTO) = 'SI'
+                        AND E.MATRICULADOS_CICLO_ANTERIOR IN ('P', 'V');
+
+        IF(P_ES_GRADUADO >= 1) THEN
+            RETURN 1;
+        ELSE
+            RETURN 0;
+        END IF;
+    END;
+END PKG_DESCUENTOS;
+/

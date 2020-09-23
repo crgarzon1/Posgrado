@@ -1,0 +1,36 @@
+@import '../../../../styles.scss';
+
+.ui-state-highlight {
+  background: none !important;
+  color: $textColor !important;
+}
+
+.matpar {
+  background-color: rgba(0, 106, 142, 0.753) !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  &:hover {
+    background-color: $tableRowHover !important;
+    color: $textColorHighlightDark !important;
+  }
+}
+
+.matimpar {
+  background-color: #006a8e !important;
+  color: #ffffff !important;
+  cursor: pointer;
+  &:hover {
+    background-color: $tableRowHover !important;
+    color: $textColorHighlightDark !important;
+  }
+}
+
+.matno {
+  background-color: white !important;
+  color: #000000 !important;
+  cursor: pointer !important;
+  &:hover {
+    background-color: $tableRowHover !important;
+    color: $textColorHighlightDark !important;
+  }
+}

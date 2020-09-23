@@ -1,0 +1,46 @@
+/**  Paleta de colores La salle  **/
+$pantone130C: #f2a900;
+$pantone540C: #003057;
+$pantoneC90: #3c3c3b;
+$pantoneC40: #b2b2b1;
+$pantone2995C: #00a9e0;
+$pantone7706C: #006a8e;
+$pantone110C: #daaa00;
+$pantone7552C: #73531d;
+$pantone2617C: #470a68;
+$pantone105C: #897a27;
+$pantone7622C: #93272c;
+$pantone1797C: #cb333b;
+$pantone1505C: #ff6900;
+$pantone7713C: #007d8a;
+$pantone381C: #cedc00;
+$pantone7742C: #4a773c;
+
+/* Fonts */
+$font-family: Arial, Helvetica, sans-serif;
+
+/* Colors */
+$textColor: #333333;
+$textColorHighlightDark: #ffffff;
+
+$primaryColor: $pantone540C;
+$primaryColorHover: darken($pantone540C, 30%);
+$tableRowHover: rgba($pantone7706C, 0.5);
+
+/*-------PrimeNG overwrite resources-------*/
+body {
+  font-family: $font-family !important;
+  margin: 0px !important;
+}
+
+body .ui-menubar {
+  padding: 0;
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+}
+
+body .ui-panel .ui-panel-titlebar {
+  border: 1px solid #007ee6 !important;
+  background-color: #007ee6 !important;
+  color: white !important;
+}

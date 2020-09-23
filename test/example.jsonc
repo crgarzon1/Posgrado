@@ -1,0 +1,23 @@
+/*   EJEMPLO JSON
+
+"nombreMetodo": "Respuesta"
+
+{
+  
+  "getEstudiantes": [
+    { "nombre": "Estudiante1", "codigo":"123" }
+    { "nombre": "Estudiante2", "codigo":"124" }
+    { "nombre": "Estudiante3", "codigo":"125" }
+  ],
+
+  "validarUser": { "respuesta": "Ok", "mensaje": "El usuario existe." }
+} 
+
+*/
+
+
+/*
+  Para desplegar el Mock:
+
+    json-server --watch test/mock.json
+*/

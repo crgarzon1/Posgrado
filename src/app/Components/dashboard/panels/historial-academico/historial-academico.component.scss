@@ -1,0 +1,33 @@
+@import '../../../../../styles.scss';
+.bordered-tr {
+  background-color: inherit;
+  border: 1px solid #c8c8c8;
+}
+
+.tr-noborder {
+  border: 0px !important;
+  font-weight: 400 !important;
+}
+
+@media only all {
+  .big-screen-only,
+  small-screen-only {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 640px) {
+  .big-screen-only {
+    display: block !important;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .small-screen-only {
+    display: block !important;
+  }
+}
+
+.dialog-hist-acad {
+  margin: 1%;
+}

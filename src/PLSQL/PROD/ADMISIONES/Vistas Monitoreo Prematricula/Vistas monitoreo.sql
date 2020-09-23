@@ -1,0 +1,367 @@
+SELECT * FROM PREMATRICULA_TURNOS;
+SELECT * FROM PREMATRICULA_TURNOS_FACULTAD;
+SELECT * FROM PREMATRICULA_TURNOS_PERFIL;
+SELECT * FROM PREMATRICULA_TURNOS_ESTUDIANTE where trunc(sysdate) = trunc(inicio);
+SELECT * FROM PREMATRICULA_REPORTE_TURNOS;
+SELECT * FROM PREMATRICULA_CUPOS_MATERIA WHERE CUPO_SUPUESTAMENTE_USADO > CUPO OR CUPO_EFECTIVAMENTE_USADO > CUPO;
+SELECT * FROM PREMATRICULA_CRUCES_HORARIO;
+SELECT * FROM PREMATRICULA_DETALLE_CRUCES;
+
+CREATE OR REPLACE PROCEDURE INFORME_PREMATRICULA_CC IS
+
+    V_TEXTO                 VARCHAR2 (1000) DEFAULT '';
+    V_ID_TURNO              NUMBER;
+    V_ESTUDIANTES           NUMBER;
+    V_PREMATRICULAS         NUMBER;
+    V_CUPOS_SOBREPASADOS    NUMBER;
+    V_CRUCES                NUMBER;
+    V_ERRORES_CONSECUTIVO   NUMBER;
+BEGIN
+    V_TEXTO   := 'INFORME DEL TURNO';
+    SELECT ID_TURNO
+    INTO V_ID_TURNO
+    FROM CTI_TURNO
+    WHERE SYSDATE BETWEEN FECHA_INICIO AND FECHA_FIN;
+
+    V_TEXTO   := V_TEXTO ||
+    ' ' ||
+    V_ID_TURNO || ': <BR />';
+    SELECT NUMERO_DE_ESTUDIANTES,
+           PREMATRICULAS_REALIZADAS
+    INTO
+        V_ESTUDIANTES,
+        V_PREMATRICULAS
+    FROM PREMATRICULA_REPORTE_TURNOS
+    WHERE ID_TURNO = V_ID_TURNO;
+
+    V_TEXTO   := V_TEXTO ||
+    ' Prematriculas realizadas  ' ||
+    V_PREMATRICULAS ||
+    ' de ' ||
+    V_ESTUDIANTES ||
+    '.<BR />';
+
+    SELECT COUNT (*)
+    INTO V_CUPOS_SOBREPASADOS
+    FROM PREMATRICULA_CUPOS_MATERIA
+    WHERE CUPO_SUPUESTAMENTE_USADO > CUPO
+          OR CUPO_EFECTIVAMENTE_USADO > CUPO;
+
+    IF (V_CUPOS_SOBREPASADOS > 0) THEN
+        V_TEXTO := V_TEXTO ||
+        ' Hay ' ||
+        V_CUPOS_SOBREPASADOS || ' grupos con sobrecupo.<BR />';
+    ELSE
+        V_TEXTO := V_TEXTO || ' No hay grupos con sobrecupo.<BR />';
+    END IF;
+
+    SELECT COUNT (*)
+    INTO V_CRUCES
+    FROM PREMATRICULA_CRUCES_HORARIO;
+
+    IF (V_CRUCES > 0) THEN
+        V_TEXTO := V_TEXTO ||
+        ' Hay ' ||
+        V_CRUCES || ' cruces.<BR />';
+    ELSE
+        V_TEXTO := V_TEXTO || ' No hay cruces.<BR />';
+    END IF;
+
+    SELECT COUNT (*)
+    INTO V_ERRORES_CONSECUTIVO
+    FROM ((SELECT CONSECUTIVO
+          FROM A_HORARIO_VERTICAL
+          MINUS
+          SELECT CONSECUTIVO
+          FROM A_HORARIO_HORIZONTAL
+          )
+          UNION
+          (SELECT CONSECUTIVO
+          FROM A_HORARIO_HORIZONTAL
+          MINUS
+          SELECT CONSECUTIVO
+          FROM A_HORARIO_VERTICAL
+          )
+    );
+
+    IF (V_ERRORES_CONSECUTIVO > 0) THEN
+        V_TEXTO := V_TEXTO ||
+        ' Hay ' ||
+        V_ERRORES_CONSECUTIVO || ' errores por consecutivo en los horarios.<BR />';
+    ELSE
+        V_TEXTO := V_TEXTO || ' No hay errores por consecutivo en los horarios.<BR />';
+    END IF;
+
+    HTP.PRN (V_TEXTO);
+EXCEPTION
+    WHEN OTHERS THEN
+        HTP.PRN ('No estamos en turno actualmente');
+END;
+/
+
+CREATE OR REPLACE VIEW PREMATRICULA_TURNOS AS
+    SELECT ID_TURNO,
+           REPLACE (REPLACE (TO_CHAR (FECHA_INICIO, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' ') FECHA_INICIO,
+           REPLACE (REPLACE (TO_CHAR (FECHA_FIN, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' ') FECHA_FIN,
+           CASE
+               WHEN ID_TIPO_OFERTA = '3' THEN
+                   'OFERTA POR SEDE'
+               ELSE
+                   'TODA LA OFERTA'
+           END TIPO_OFERTA,
+           PORCENT_INF || '%' PORCENTAJE_INFERIOR,
+           PORCENT_SUP || '%' PORCENTAJE_SUPERIOR
+    FROM ADMISIONES.CTI_TURNO
+    ORDER BY ID_TURNO;
+/
+
+CREATE OR REPLACE VIEW PREMATRICULA_TURNOS_FACULTAD AS
+    SELECT TURNO.ID_TURNO,
+           LISTAGG (FACULTAD.CODIGO || FACULTAD.JORNADA, ', ') WITHIN GROUP (
+               ORDER BY FACULTAD.CODIGO || FACULTAD.JORNADA
+           ) CODIGOS_FACULTADES,
+           REPLACE (REPLACE (TO_CHAR (TURNO.FECHA_INICIO, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' ') FECHA_INICIO,
+           REPLACE (REPLACE (TO_CHAR (TURNO.FECHA_FIN, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' ') FECHA_FIN,
+           CASE
+               WHEN ID_TIPO_OFERTA = '3' THEN
+                   'OFERTA POR SEDE'
+               ELSE
+                   'TODA LA OFERTA'
+           END TIPO_OFERTA,
+           PORCENT_INF || '%' PORCENTAJE_INFERIOR,
+           PORCENT_SUP || '%' PORCENTAJE_SUPERIOR
+    FROM ADMISIONES.CTI_TURNO            TURNO
+    INNER JOIN ADMISIONES.CTI_TURNO_FACULTAD   TURNO_FACULTAD ON TURNO.ID_TURNO = TURNO_FACULTAD.ID_TURNO
+    INNER JOIN ADMISIONES.A_FACULTADES         FACULTAD ON FACULTAD.CODIGO = TURNO_FACULTAD.CODIGO_FACULTAD
+                                                   AND FACULTAD.JORNADA = TURNO_FACULTAD.JORNADA_FACULTAD
+    GROUP BY TURNO.ID_TURNO,
+             REPLACE (REPLACE (TO_CHAR (TURNO.FECHA_INICIO, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' '),
+             REPLACE (REPLACE (TO_CHAR (TURNO.FECHA_FIN, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' '),
+             CASE
+                 WHEN ID_TIPO_OFERTA = '3' THEN
+                     'OFERTA POR SEDE'
+                 ELSE
+                     'TODA LA OFERTA'
+             END,
+             PORCENT_INF || '%',
+             PORCENT_SUP || '%'
+    ORDER BY TURNO.ID_TURNO;
+/
+
+CREATE OR REPLACE VIEW PREMATRICULA_TURNOS_PERFIL AS
+    SELECT TURNO.ID_TURNO,
+           LISTAGG (GRUPO_ESTUDIANTE.GRUPO, ', ') WITHIN GROUP (
+               ORDER BY GRUPO_ESTUDIANTE.GRUPO
+           ) GRUPOS_ESTUDIANTES,
+           REPLACE (REPLACE (TO_CHAR (TURNO.FECHA_INICIO, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' ') FECHA_INICIO,
+           REPLACE (REPLACE (TO_CHAR (TURNO.FECHA_FIN, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' ') FECHA_FIN,
+           CASE
+               WHEN ID_TIPO_OFERTA = '3' THEN
+                   'OFERTA POR SEDE'
+               ELSE
+                   'TODA LA OFERTA'
+           END TIPO_OFERTA,
+           PORCENT_INF || '%' PORCENTAJE_INFERIOR,
+           PORCENT_SUP || '%' PORCENTAJE_SUPERIOR
+    FROM ADMISIONES.CTI_TURNO              TURNO
+    INNER JOIN ADMISIONES.CTI_TURNO_PERFIL       TURNO_PERFIL ON TURNO.ID_TURNO = TURNO_PERFIL.ID_TURNO
+    INNER JOIN ADMISIONES.CTI_GRUPO_ESTUDIANTE   GRUPO_ESTUDIANTE ON TURNO_PERFIL.ID_GRUPO = GRUPO_ESTUDIANTE.ID_GRUPO
+    GROUP BY TURNO.ID_TURNO,
+             REPLACE (REPLACE (TO_CHAR (TURNO.FECHA_INICIO, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' '),
+             REPLACE (REPLACE (TO_CHAR (TURNO.FECHA_FIN, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' '),
+             CASE
+                 WHEN ID_TIPO_OFERTA = '3' THEN
+                     'OFERTA POR SEDE'
+                 ELSE
+                     'TODA LA OFERTA'
+             END,
+             PORCENT_INF || '%',
+             PORCENT_SUP || '%'
+    ORDER BY TURNO.ID_TURNO;
+/
+
+CREATE OR REPLACE VIEW PREMATRICULA_TURNOS_ESTUDIANTE AS
+    SELECT A.ID_TURNO,
+           C.CODIGO CODIGO_ESTUDIANTE,
+           C.NOMBRE NOMBRE_ESTUDIANTE,
+           C.PORCRED_APROBADO PORCENTAJE_CREDITOS_APROBADOS,
+           A.PORCENT_INF || '%' PORCENTAJE_INFERIOR,
+           A.PORCENT_SUP || '%' PORCENTAJE_SUPERIOR,
+           B.INICIO,
+           B.FIN
+    FROM CTI_TURNO                 A
+    INNER JOIN CTI_TURNOS_PREMATRICULA   B ON A.FECHA_INICIO = B.INICIO
+                                            AND A.FECHA_FIN = B.FIN
+    INNER JOIN B_ESTUDIANTES             C ON B.CODIGO_ESTUDIANTE = C.CODIGO;
+/
+
+CREATE OR REPLACE VIEW PREMATRICULA_REPORTE_TURNOS AS
+    SELECT A.ID_TURNO,
+           COUNT (B.CODIGO_ESTUDIANTE) NUMERO_DE_ESTUDIANTES,
+           COUNT (PREMATRICULA.CODIGO_ESTUDIANTE) PREMATRICULAS_REALIZADAS,
+           REPLACE (REPLACE (TO_CHAR (A.FECHA_INICIO, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' ') INICIO,
+           REPLACE (REPLACE (TO_CHAR (A.FECHA_FIN, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' ') FIN
+    FROM CTI_TURNO                                             A
+    LEFT JOIN CTI_TURNOS_PREMATRICULA                               B ON A.FECHA_INICIO = B.INICIO
+                                           AND A.FECHA_FIN = B.FIN
+    LEFT JOIN (SELECT DISTINCT CODIGO_ESTUDIANTE
+               FROM B_PREMATRICULA
+              ) PREMATRICULA ON PREMATRICULA.CODIGO_ESTUDIANTE = B.CODIGO_ESTUDIANTE
+    GROUP BY A.ID_TURNO,
+             REPLACE (REPLACE (TO_CHAR (A.FECHA_INICIO, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' '),
+             REPLACE (REPLACE (TO_CHAR (A.FECHA_FIN, 'DD_"de"_Month_"del"_YYYY_HH:MI:SS_AM'), ' ', ''), '_', ' ')
+    ORDER BY ID_TURNO;
+/
+
+CREATE OR REPLACE VIEW PREMATRICULA_CUPOS_MATERIA AS
+    SELECT HORARIO.CODIGO_MATERIA,
+           HORARIO.GRUPO_MATERIA,
+           MATERIA.NOMBRE,
+           HORARIO.CODIGO_FACULTAD,
+           HORARIO.JORNADA_FACULTAD,
+           HORARIO.CUPO,
+           HORARIO.CUPO_UTILIZADO CUPO_SUPUESTAMENTE_USADO,
+           COUNT (PREMATRICULA.CODIGO_ESTUDIANTE) CUPO_EFECTIVAMENTE_USADO
+    FROM A_HORARIO_HORIZONTAL   HORARIO
+    INNER JOIN A_MATERIAS             MATERIA ON MATERIA.CODIGO = HORARIO.CODIGO_MATERIA
+                                     AND MATERIA.CODIGO_FACULTAD = HORARIO.CODIGO_FACULTAD
+                                     AND MATERIA.JORNADA_FACULTAD = HORARIO.JORNADA_FACULTAD
+    LEFT JOIN B_PREMATRICULA         PREMATRICULA ON PREMATRICULA.MATERIA_CURSAR = HORARIO.CODIGO_MATERIA
+                                             AND PREMATRICULA.FACULTAD_CURSAR = HORARIO.CODIGO_FACULTAD
+                                             AND PREMATRICULA.JORNADA_FACULTAD = HORARIO.JORNADA_FACULTAD
+                                             AND TO_NUMBER(PREMATRICULA.GRUPO) = TO_NUMBER(HORARIO.GRUPO_MATERIA)
+    GROUP BY HORARIO.CODIGO_MATERIA,
+             HORARIO.GRUPO_MATERIA,
+             MATERIA.NOMBRE,
+             HORARIO.CODIGO_FACULTAD,
+             HORARIO.JORNADA_FACULTAD,
+             HORARIO.CUPO,
+             HORARIO.CUPO_UTILIZADO
+    ORDER BY 1,
+             2;
+/
+
+CREATE OR REPLACE VIEW PREMATRICULA_CRUCES_HORARIO AS
+    SELECT CODIGO_ESTUDIANTE,
+           DIA,
+           HORA,
+           GRUPOS_POR_HORA
+    FROM (SELECT CODIGO_ESTUDIANTE,
+                 DIA,
+                 HORA,
+                 COUNT (*) GRUPOS_POR_HORA
+          FROM B_PREMATRICULA       PREMATRICULA
+          INNER JOIN A_HORARIO_VERTICAL   HORARIO ON PREMATRICULA.MATERIA_CURSAR = HORARIO.CODIGO_MATERIA
+                                                              AND PREMATRICULA.FACULTAD_CURSAR = HORARIO.CODIGO_FACULTAD
+                                                              AND PREMATRICULA.JORNADA_FACULTAD = HORARIO.JORNADA_FACULTAD
+                                                              AND TO_NUMBER(PREMATRICULA.GRUPO) = TO_NUMBER(HORARIO.GRUPO_MATERIA)
+          GROUP BY CODIGO_ESTUDIANTE,
+                   DIA,
+                   HORA
+          ORDER BY 1,
+                   2,
+                   3) PREMATRICULA_CON_HORARIO
+    WHERE GRUPOS_POR_HORA > 1;
+/
+
+CREATE OR REPLACE VIEW PREMATRICULA_DETALLE_CRUCES AS
+    SELECT PREMATRICULA.CODIGO_ESTUDIANTE,
+           HORARIO.DIA,
+           HORARIO.HORA,
+           HORARIO.CODIGO_MATERIA,
+           HORARIO.GRUPO_MATERIA
+    FROM B_PREMATRICULA       PREMATRICULA
+    LEFT JOIN A_HORARIO_VERTICAL   HORARIO ON PREMATRICULA.MATERIA_CURSAR = HORARIO.CODIGO_MATERIA
+                                            AND PREMATRICULA.FACULTAD_CURSAR = HORARIO.CODIGO_FACULTAD
+                                            AND PREMATRICULA.JORNADA_FACULTAD = HORARIO.JORNADA_FACULTAD
+                                            AND TO_NUMBER (PREMATRICULA.GRUPO) = TO_NUMBER (HORARIO.GRUPO_MATERIA)
+    INNER JOIN (SELECT CODIGO_ESTUDIANTE,
+                       DIA,
+                       HORA
+                FROM (SELECT CODIGO_ESTUDIANTE,
+                             DIA,
+                             HORA,
+                             COUNT (*) GRUPOS_POR_HORA
+                      FROM B_PREMATRICULA       PREMATRICULA
+                      INNER JOIN A_HORARIO_VERTICAL   HORARIO ON PREMATRICULA.MATERIA_CURSAR = HORARIO.CODIGO_MATERIA
+                                                               AND PREMATRICULA.FACULTAD_CURSAR = HORARIO.CODIGO_FACULTAD
+                                                               AND PREMATRICULA.JORNADA_FACULTAD = HORARIO.JORNADA_FACULTAD
+                                                               AND TO_NUMBER (PREMATRICULA.GRUPO) = TO_NUMBER (HORARIO.GRUPO_MATERIA)
+                      GROUP BY CODIGO_ESTUDIANTE,
+                               DIA,
+                               HORA
+                      ORDER BY 1,
+                               2,
+                               3) PREMATRICULA_CON_HORARIO
+                WHERE GRUPOS_POR_HORA > 1
+               ) CRUCES ON CRUCES.CODIGO_ESTUDIANTE = PREMATRICULA.CODIGO_ESTUDIANTE
+                           AND CRUCES.DIA = HORARIO.DIA
+                           AND CRUCES.HORA = HORARIO.HORA
+    ORDER BY 1,
+             2,
+             3,
+             4;
+/
+CREATE OR REPLACE PROCEDURE REPORTE_PREMATRICULA_POWER_BI IS
+    V_JSON_LIST   JSON_LIST DEFAULT JSON_LIST ();
+    V_JSON        JSON;
+BEGIN
+    FOR V_TURNO IN (SELECT A.ID_TURNO,
+                           COUNT (B.CODIGO_ESTUDIANTE) NUMERO_DE_ESTUDIANTES,
+                           COUNT (PREMATRICULA.CODIGO_ESTUDIANTE) PREMATRICULAS_REALIZADAS,
+                           A.FECHA_INICIO,
+                           A.FECHA_FIN
+                    FROM CTI_TURNO                 A
+                    LEFT JOIN CTI_TURNOS_PREMATRICULA   B ON A.FECHA_INICIO = B.INICIO
+                                                           AND A.FECHA_FIN = B.FIN
+                    LEFT JOIN (SELECT DISTINCT CODIGO_ESTUDIANTE
+                               FROM B_PREMATRICULA
+                              ) PREMATRICULA ON PREMATRICULA.CODIGO_ESTUDIANTE = B.CODIGO_ESTUDIANTE
+                    GROUP BY A.ID_TURNO,
+                             A.FECHA_INICIO,
+                             A.FECHA_FIN
+                    ORDER BY ID_TURNO) LOOP
+        V_JSON := JSON ();
+        JSON.PUT (V_JSON, 'idTurno', V_TURNO.ID_TURNO);
+        JSON.PUT (V_JSON, 'numeroEstudiantes', V_TURNO.NUMERO_DE_ESTUDIANTES);
+        JSON.PUT (V_JSON, 'prematriculasRealizadas', V_TURNO.PREMATRICULAS_REALIZADAS);
+        JSON.PUT (V_JSON, 'inicio', TO_CHAR (V_TURNO.FECHA_INICIO, 'YYYY/MM/DD HH:MI:SS AM'));
+        JSON.PUT (V_JSON, 'fin', TO_CHAR (V_TURNO.FECHA_FIN, 'YYYY/MM/DD HH:MI:SS AM'));
+        JSON_LIST.APPEND (V_JSON_LIST, V_JSON.TO_JSON_VALUE);
+    END LOOP;
+    
+    JSON_LIST.HTP(V_JSON_LIST,FALSE);
+EXCEPTION
+    WHEN OTHERS THEN
+        PKG_JSON_RESPONSE.PRINT_FAILURE_OR_EXCEPTION;
+END;
+/
+
+SELECT CC_ENCRYPT('http://registro.lasalle.edu.co/pls/regadm/REPORTE_POWER_BI') FROM DUAL;
+CREATE OR REPLACE PROCEDURE REPORTE_POWER_BI IS
+    V_JSON_LIST   JSON_LIST DEFAULT JSON_LIST ();
+    V_JSON        JSON;
+    V_NUMBER      NUMBER;
+    V_PERCENTAGE  NUMBER;
+BEGIN
+    FOR C_INDEX IN 1..20
+    LOOP
+        V_JSON := JSON ();
+        JSON.PUT (V_JSON, 'idTurno', C_INDEX);
+        
+        V_NUMBER:=  floor(dbms_random.value(500, 2000));
+        V_PERCENTAGE:=  floor(dbms_random.value(1, 100));
+        
+        JSON.PUT (V_JSON, 'numeroEstudiantes', V_NUMBER);        
+        JSON.PUT (V_JSON, 'prematriculasRealizadas', ROUND(V_NUMBER / 100 * V_PERCENTAGE));
+        JSON.PUT (V_JSON, 'inicio', TO_CHAR (ADD_MONTHS(SYSDATE, C_INDEX), 'YYYY/MM/DD HH:MI:SS AM'));
+        JSON.PUT (V_JSON, 'fin', TO_CHAR (ADD_MONTHS(SYSDATE, C_INDEX), 'YYYY/MM/DD HH:MI:SS AM'));
+        JSON_LIST.APPEND (V_JSON_LIST, V_JSON.TO_JSON_VALUE);
+    END LOOP;
+    
+    JSON_LIST.HTP(V_JSON_LIST,FALSE);
+EXCEPTION
+    WHEN OTHERS THEN
+        PKG_JSON_RESPONSE.PRINT_FAILURE_OR_EXCEPTION;
+END;
+/

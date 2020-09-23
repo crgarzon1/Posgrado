@@ -1,0 +1,45 @@
+<p-blockUI [target]="pnl" [blocked]="blocked">
+  <i
+    class="pi pi-info-circle"
+    style="position: absolute; top: 30%; left: 36%; font-size: 10em;"
+    pTooltip="No existen procesos de matricula"
+    tooltipZIndex="99999"
+  ></i>
+</p-blockUI>
+
+<p-panel #pnl [header]="stringHelper.getResource('titulo-embudo')">
+  <div class="ui-g" style="min-height: 335px;" *ngIf="blocked">
+    <img src="assets/images/embudo.jpg" alt="block-ui" style="width: 100%; height: 100%; margin: auto;" />
+  </div>
+  <div class="ui-g" style="min-height: 335px;" *ngIf="!blocked">
+    <div class="ui-g-12 ui-sm-12">
+      <p-chart type="horizontalBar" [data]="data" height="99%" [options]="options"></p-chart>
+    </div>
+    <div class="ui-g-12 ui-sm-12" style="position: relative; text-align: center;">
+      <i
+        class="pi pi-list"
+        (click)="showDialog(1)"
+        style="font-size: 2em; position: absolute !important; bottom: 6px !important; right: 46px !important; cursor: pointer;"
+        pTooltip="Aspirantes inscritos"
+      ></i>
+      <i
+        class="pi pi-clone"
+        (click)="showDialog(2)"
+        style="font-size: 2em; position: absolute !important; bottom: 6px !important; right: 6px !important; cursor: pointer;"
+        pTooltip="Proceso de admisión"
+      ></i>
+    </div>
+  </div>
+</p-panel>
+
+<p-dialog
+  [header]="stringHelper.getResource('dlg-header')"
+  [(visible)]="display"
+  [modal]="true"
+  [responsive]="true"
+  [style]="{ width: '80%', minWidth: '80%' }"
+  [maximizable]="true"
+  [baseZIndex]="10000"
+>
+  <iframe width="100%" style="min-height: 700px; height: 100%;" [src]="url | safe"></iframe>
+</p-dialog>

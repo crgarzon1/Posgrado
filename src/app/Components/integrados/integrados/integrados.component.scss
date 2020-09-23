@@ -1,0 +1,85 @@
+.listas {
+  margin: 0px;
+}
+
+.progress {
+  background-color: rgba(150, 150, 150, 0.5);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0%;
+  left: 0%;
+}
+
+.spinner {
+  float: left;
+  position: fixed;
+  top: calc(50% - 75px);
+  left: calc(50% - 75px);
+}
+
+body .ui-panel .ui-panel-content {
+  padding: 0em !important;
+}
+
+::ng-deep body .ui-listbox,
+.ui-inputtext {
+  border: 0;
+}
+
+::ng-deep .ui-card-body {
+  padding: 0em !important;
+}
+
+.panel {
+  padding: 0em !important;
+}
+
+.trash:hover {
+  animation: bounce 1s;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.trash {
+  color: red;
+  margin-left: 25%;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  60%,
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+
+  80% {
+    -webkit-transform: translateY(-5px);
+    transform: translateY(-5px);
+  }
+}
+
+// .ui-panel-titlebar {
+// 	display: none !important;
+// }
+
+#headerPaneles {
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  padding: 0.65em 0.85em;
+  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+:host ::ng-deep button {
+  margin-right: 0.25em;
+}

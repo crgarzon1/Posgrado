@@ -1,0 +1,152 @@
+<p-blockUI [target]="pnl" [blocked]="blocked">
+  <i
+    class="pi pi-lock"
+    style="position: absolute; top: 28%; left: 33%; font-size: 10em;"
+    [pTooltip]="stringHelper.getResource('tooltip-blockui')"
+    tooltipZIndex="99999"
+  ></i>
+</p-blockUI>
+<p-panel #pnl [header]="stringHelper.getResource('header-titulo')">
+  <div id="mis-notas" class="ui-g" style="min-height: 335px;" *ngIf="blocked">
+    <img src="assets/images/5.jpg" alt="block-ui" style="width: 100%; height: 100%; margin: auto;" />
+  </div>
+  <div class="ui-g" style="min-height: 335px;" *ngIf="!blocked && dataSource.historialAcademico">
+    <div class="ui-g-3 ui-sm-12" style="position: relative; text-align: center;">
+      <br class="big-screen-only" />
+      <br class="big-screen-only" />
+      <br class="big-screen-only" />
+      <p style="font-size: 40px;">{{ dataSource.historialAcademico.promedio }}</p>
+      <span style="font-size: 16px;"> {{ stringHelper.getResource('lbl-promedio-academico') }} </span>
+      <i
+        class="pi pi-search-plus"
+        (click)="showDialog()"
+        style="font-size: 2em; position: absolute !important; bottom: 18px !important; left: 12px !important; cursor: pointer;"
+      ></i>
+    </div>
+    <div class="ui-g-9 ui-sm-12">
+      <p-chart type="bar" [data]="data" height="100%" [options]="options"></p-chart>
+    </div>
+  </div>
+  <p-dialog
+    [header]="stringHelper.getResource('header-titulo')"
+    [(visible)]="display"
+    [responsive]="true"
+    [modal]="true"
+    [style]="{ width: '70%', minWidth: '70%' }"
+    [maximizable]="true"
+    appendTo="body"
+    [baseZIndex]="9999"
+  >
+    <div *ngIf="dataSource.historialAcademico">
+      <div *ngFor="let ciclo of dataSource.historialAcademico.ciclos; let i = index" class="dialog-hist-acad">
+        <div style="position: relative; text-align: center;">
+          <h2>{{ ciclo.anno + '-' + ciclo.cicloreal }}</h2>
+        </div>
+        <p-table [value]="ciclo.materias" [responsive]="true">
+          <ng-template pTemplate="header">
+            <tr class="bordered-tr">
+              <th style="width: 20% !important;">{{ stringHelper.getResource('tbl-codigo') }}</th>
+              <th style="width: 50%;">{{ stringHelper.getResource('tbl-nombre') }}</th>
+              <th style="width: 15%;">{{ stringHelper.getResource('tbl-nota') }}</th>
+              <th style="width: 15%;">{{ stringHelper.getResource('tbl-creditos') }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-materia>
+            <tr class="bordered-tr">
+              <td>
+                <span class="ui-column-title">{{ stringHelper.getResource('tbl-codigo') }}</span
+                >{{ materia.codigo }}
+              </td>
+              <td>
+                <span class="ui-column-title">{{ stringHelper.getResource('tbl-nombre') }}</span
+                >{{ materia.nombre }}
+              </td>
+              <td>
+                <span class="ui-column-title">{{ stringHelper.getResource('tbl-nota') }}</span
+                >{{ materia.nota }}
+              </td>
+              <td>
+                <span class="ui-column-title">{{ stringHelper.getResource('tbl-creditos') }}</span
+                >{{ materia.creditos }}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer" *ngIf="ciclo.cicloreal == 'PRIMER PERIODO' || ciclo.cicloreal == 'SEGUNDO PERIODO'">
+            <tr class="tr-noborder">
+              <td colspan="4" class="tr-noborder">
+                <table style="font-size: 12px; right: 5px;">
+                  <tr class="tr-noborder">
+                    <td>{{ stringHelper.getResource('tbl-creditos-cursados') }}:</td>
+                    <td>{{ ciclo.sumatoriaCreditosCursados }}</td>
+                  </tr>
+                  <tr class="tr-noborder">
+                    <td>{{ stringHelper.getResource('tbl-creditos-aprobados') }}:</td>
+                    <td>{{ ciclo.sumatoriaCreditosAprobados }}</td>
+                  </tr>
+                  <tr class="tr-noborder">
+                    <td>{{ stringHelper.getResource('tbl-promedio-ponderado') }}:</td>
+                    <td>{{ ciclo.promedio }}</td>
+                  </tr>
+                  <tr class="tr-noborder">
+                    <td>{{ stringHelper.getResource('tbl-promedio-acumulado') }}:</td>
+                    <td>{{ ciclo.promedioAcumulado }}</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <br />
+      </div>
+      <div *ngIf="dataSource.historialAcademico.bolsasDeCreditos" class="dialog-hist-acad">
+        <div *ngFor="let bolsa of dataSource.historialAcademico.bolsasDeCreditos; let i = index">
+          <div style="position: relative; text-align: center;">
+            <h2>HA APROBADO: {{ bolsa.creditosAprobados }} / {{ bolsa.tope }} CREDITOS ELECTIVOS</h2>
+          </div>
+          <div *ngIf="bolsa.materias">
+            <p-table [value]="bolsa.materias" [responsive]="true">
+              <ng-template pTemplate="header">
+                <tr class="bordered-tr">
+                  <th style="width: 10% !important;">{{ stringHelper.getResource('tbl-periodo') }}</th>
+                  <th style="width: 20%;">{{ stringHelper.getResource('tbl-programa') }}</th>
+                  <th style="width: 20%;">{{ stringHelper.getResource('tbl-codigo-asignatura') }}</th>
+                  <th style="width: 20%;">{{ stringHelper.getResource('tbl-asignatura') }}</th>
+                  <th style="width: 15%;">{{ stringHelper.getResource('tbl-nota') }}</th>
+                  <th style="width: 15%;">{{ stringHelper.getResource('tbl-creditos') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-materia>
+                <tr class="bordered-tr">
+                  <td>
+                    <span class="ui-column-title">{{ stringHelper.getResource('tbl-periodo') }}</span
+                    >201902
+                  </td>
+                  <td>
+                    <span class="ui-column-title">{{ stringHelper.getResource('tbl-programa') }}</span
+                    >{{ materia.facultad }}
+                  </td>
+                  <td>
+                    <span class="ui-column-title">{{ stringHelper.getResource('tbl-codigo-asignatura') }}</span
+                    >{{ materia.codigo }}
+                  </td>
+                  <td>
+                    <span class="ui-column-title">{{ stringHelper.getResource('tbl-asignatura') }}</span
+                    >{{ materia.nombre }}
+                  </td>
+                  <td>
+                    <span class="ui-column-title">{{ stringHelper.getResource('tbl-nota') }}</span
+                    >{{ materia.nota }}
+                  </td>
+                  <td>
+                    <span class="ui-column-title">{{ stringHelper.getResource('tbl-creditos') }}</span
+                    >{{ materia.creditos }}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-dialog>
+</p-panel>

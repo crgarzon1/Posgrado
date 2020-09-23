@@ -1,0 +1,87 @@
+<h3>{{ stringHelper.getResource('titulo-matricula') }}</h3>
+<div *ngIf="observableMatricula.asignaturasMatriculadas.length">
+  <p-table
+    *ngIf="observableMatricula.asignaturasMatriculadas.length"
+    [value]="observableMatricula.asignaturasMatriculadas"
+    [responsive]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 6% !important;">
+          {{ stringHelper.getResource('tbl-codigo') }}
+        </th>
+        <th style="width: 7% !important;">
+          {{ stringHelper.getResource('tbl-semestre') }}
+        </th>
+        <th style="width: 7% !important;">
+          {{ stringHelper.getResource('tbl-creditos') }}
+        </th>
+        <th>{{ stringHelper.getResource('tbl-materia-plan') }}</th>
+        <th>{{ stringHelper.getResource('tbl-programa-cursar') }}</th>
+        <th style="width: 8% !important;">
+          {{ stringHelper.getResource('tbl-codigo-cursar') }}
+        </th>
+        <th>{{ stringHelper.getResource('tbl-materia-cursar') }}</th>
+        <th style="width: 6% !important;">
+          {{ stringHelper.getResource('tbl-grupo') }}
+        </th>
+        <th style="width: 6% !important;">
+          {{ stringHelper.getResource('tbl-eliminar') }}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-mat>
+      <tr *ngFor="let grupoActual of mat.grupos" [ngClass]="mat.bolsa && mat.bolsa != 0 ? 'cursiva' : 'normal'">
+        <td>
+          <span class="ui-column-title">{{ stringHelper.getResource('tbl-codigo') }}</span>
+          {{ mat.materia.codigo }}
+        </td>
+        <td>
+          <span class="ui-column-title">{{ stringHelper.getResource('tbl-semestre') }}</span>
+          {{ mat.materia.semestre }}
+        </td>
+        <td>
+          <span class="ui-column-title">{{ stringHelper.getResource('tbl-creditos') }}</span>
+          {{ mat.materia.creditos }}
+        </td>
+        <td>
+          <span class="ui-column-title">{{ stringHelper.getResource('tbl-materia-plan') }}</span>
+          {{ mat.materia.nombre }}
+        </td>
+        <td>
+          <span class="ui-column-title">{{ stringHelper.getResource('tbl-programa-cursar-red') }}</span>
+          {{ mat.materia.facultad.nombre }}
+        </td>
+        <td>
+          <span class="ui-column-title">{{ stringHelper.getResource('tbl-codigo-cursar') }}</span>
+          {{ grupoActual.materia.codigo }}
+        </td>
+        <td>
+          <span class="ui-column-title">{{ stringHelper.getResource('tbl-materia-cursar-red') }}</span>
+          {{ grupoActual.materia.nombre }}
+        </td>
+        <td>
+          <span class="ui-column-title">{{ stringHelper.getResource('tbl-grupo') }}</span>
+          {{ grupoActual.grupo }}
+        </td>
+        <td>
+          <span class="ui-column-title">{{ stringHelper.getResource('tbl-eliminar') }}</span>
+          <i class="pi pi-trash trash" (click)="eliminarMateria(mat, grupoActual)" style="font-size: 2em; color: 'red';"></i>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<div *ngIf="!observableMatricula.asignaturasMatriculadas.length">
+  <h4>{{ stringHelper.getResource('msj-sin-materias') }}</h4>
+</div>
+
+<p-confirmDialog
+  header="{{ stringHelper.getResource('dlg-header') }}"
+  acceptLabel="{{ stringHelper.getResource('dlg-accept') }}"
+  rejectLabel="{{ stringHelper.getResource('dlg-reject') }}"
+  appendTo="body"
+  baseZIndex="10003"
+></p-confirmDialog>
+
+<p-toast position="top-center"></p-toast>

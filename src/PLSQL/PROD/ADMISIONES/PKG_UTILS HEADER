@@ -1,0 +1,218 @@
+create or replace package pkg_utils
+as
+    function f_leertoken(
+            token       varchar2,
+            vencimiento number default 1 / 24,
+            llave       varchar2 default 'abcdefgh')
+        return varchar2;
+    function f_creartoken(
+            p_datos varchar2,
+            llave   varchar2 default 'abcdefgh')
+        return varchar2;
+    function f_crear_token_cookie(
+            p_usuario varchar2,
+            p_clave   varchar2)
+        return varchar2;
+    procedure p_leer_cookie(
+            p_usuario in out varchar2,
+            p_clave   in out varchar2,
+            p_documento out varchar2,
+            p_codigo out varchar2,
+            p_nombre out varchar2) ;
+    procedure p_redirect(
+            p_procedimiento varchar2,
+            p_parametros    varchar2 default null) ;
+    procedure getestudiante(
+            p_codigo     varchar2,
+            p_encabezado number default 1) ;
+    procedure getfacultad(
+            p_codigo varchar2,
+            p_header number default 1,
+            p_activas number default 1) ;
+    procedure getfacultades(
+            p_tipo   number default 0,
+            p_header number default 1,
+            p_activas number default 1) ;
+    procedure getmateria(
+            p_facultad varchar2,
+            p_jornada  varchar2,
+            p_plan     varchar2,
+            p_codigo   varchar2,
+            p_header   number default 1) ;
+    function porcentajeaprobacion(
+            p_codigo b_estudiantes.codigo%type,
+            p_anio a_notas.ano%type,
+            p_ciclo a_notas.ciclo%type)
+        return number;
+    function creditosprematriculados(
+            p_codigo b_estudiantes.codigo%type)
+        return number;
+    function semestreinferior(
+            p_codigo b_estudiantes.codigo%type)
+        return number;
+    function acentos(
+            texto varchar2)
+        return varchar2;
+    procedure getaniociclo(
+            p_codigo in varchar2,
+            p_anio out varchar2,
+            p_ciclo out varchar2) ;
+    function antesprimeranota(
+            p_codigo varchar2,
+            p_anio   varchar2,
+            p_ciclo  varchar2)
+        return number;
+    function promedioponderadototal(
+            p_codigo b_estudiantes.codigo%type)
+        return number;
+    function promedioponderadohasta(
+            p_codigo b_estudiantes.codigo%type,
+            p_anio  varchar2,
+            p_ciclo varchar2,
+            p_plan number default -1,
+            p_round number default -1)
+        return number;
+    procedure getdocente(
+            p_documento      varchar2,
+            p_carga          number default 0,
+            p_intersemestral number default 0) ;
+    function getfoto(
+            p_codigo varchar2)
+        return varchar2;
+    function porcentajecreditosaprobados(
+            p_codigo b_estudiantes.codigo%type)
+        return number;
+    function porcentajecreditoscursados(
+            p_codigo b_estudiantes.codigo%type)
+        return number;    
+    function semestrepromedio(
+            p_codigo b_estudiantes.codigo%type)
+        return number;
+    procedure getaniocicloesquema(
+            p_tipo_ciclo in number default 1,
+            p_anio out varchar2,
+            p_ciclo out varchar2,
+            p_schema out varchar2) ;
+    procedure aniociclojson(
+            p_cod varchar2) ;
+    function espilo(
+            p_codigo varchar2)
+        return number;
+    function estasuspendido(
+            p_codigo varchar2)
+        return number;
+    function esreintegro(
+            p_codigo varchar2)
+        return number;
+    function retiromateria(
+            p_codigo varchar2,
+            p_mplan  varchar2,
+            p_anio   varchar2,
+            p_ciclo  varchar2)
+        return number;
+    function esingsinturno(
+            p_codigo varchar2,
+            p_anio   varchar2,
+            p_ciclo  varchar2)
+        return number;
+    function nomateriasretiradas(
+            p_codigo varchar2,
+            p_anio   varchar2,
+            p_ciclo  varchar2)
+        return number;
+    procedure getresumencreditos(
+            p_codigo in varchar2,
+            p_anio   in varchar2,
+            p_ciclo  in varchar2,
+            p_sem_inf out number,
+            p_crd_max out number,
+            p_crd_ins out number,
+            p_dp in number default 1) ;
+    function aplicaart47(
+        p_codigo varchar2,
+        p_val_dp number default 1)
+    return number;
+    function numerocreditosaprobados(
+            p_codigo b_estudiantes.codigo%type)
+        return number;
+    procedure getfacultadjornada(
+            p_codigo  varchar2,
+            p_jornada varchar2,
+            p_header  number default 1);
+    procedure getfacultadesjornada(
+            p_tipo   number default 0,
+            p_header number default 1);
+    function estaVigente(
+            p_proceso varchar2,
+            p_tipo number default 1)
+        return number;
+    procedure actualizarDocumento(
+        p_tdoc_old varchar2,
+        p_ndoc_old varchar2,
+        p_tdoc_new varchar2,
+        p_ndoc_new varchar2
+    );
+    procedure bloqueosGuia (
+        p_codigo varchar2
+    );
+  
+  Function cti_mim_email (p_tipo_documento in varchar,p_documento IN VARCHAR2)
+RETURN VARCHAR2;
+
+  Function cti_mim_doc_anterior (p_tipo_documento in varchar,p_documento IN VARCHAR2)
+RETURN VARCHAR2;
+
+    function getCredMax (
+        p_codigo varchar2
+    ) return number;
+    procedure sendMail (
+        destinatario varchar2,
+        asunto varchar2,
+        mensaje varchar2,
+        cco varchar2 default null
+    );
+    procedure actualizarDPMulticodigo;
+    procedure getPerfiles (
+        token varchar2
+    );
+    function promedioPeriodoSTD (
+        p_codigo b_estudiantes.codigo%type,
+        p_anio a_notas.ano%type,
+        p_ciclo a_notas.ciclo%type,
+        p_plan b_estudiantes.plan_estudio%type default null,
+        p_sin_perdidas number default 0,
+        p_round number default -1
+    ) return number;
+    function promedioperiodo(
+        p_codigo b_estudiantes.codigo%type,
+        p_anio a_notas.ano%type,
+        p_ciclo a_notas.ciclo%type,
+        p_plan b_estudiantes.plan_estudio%type default null
+    ) return number;
+    function promedioPeriodoAprobadas (
+        p_codigo b_estudiantes.codigo%type,
+        p_anio a_notas.ano%type,
+        p_ciclo a_notas.ciclo%type,
+        p_plan b_estudiantes.plan_estudio%type default null
+    ) return number;
+    function promedioPeriodoCertificado (
+        p_codigo b_estudiantes.codigo%type,
+        p_anio a_notas.ano%type,
+        p_ciclo a_notas.ciclo%type
+    ) return number;
+    procedure getCodigosXUsername (
+        p_username varchar2
+    );
+    procedure getCodigosXDocumento (
+        p_documento varchar2
+    );
+    function ciclosDespuesDeFinMateriasRA(
+        p_codigo b_estudiantes.codigo%type
+    ) return number;
+    procedure getProgramasACargo(
+        p_facultad varchar2
+    );
+    function esNuevo(
+        p_codigo varchar2
+    ) return number;
+end pkg_utils;

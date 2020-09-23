@@ -1,0 +1,38 @@
+@import '../../../../../styles.scss';
+
+.crop-container {
+  position: relative;
+  width: 150px !important;
+  height: 150px !important;
+  margin: 0 auto;
+}
+
+.crop-container .img {
+  position: absolute;
+  width: auto;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.img {
+  vertical-align: middle;
+}
+
+.info-text {
+  text-align: center;
+}
+
+.nombre {
+  font-size: 17px;
+}
+
+.tr-noborder {
+  border: 0px !important;
+  //font-weight: 400 !important;
+  font-size: 15px;
+}
+
+td {
+  padding: 5px 0px;
+}

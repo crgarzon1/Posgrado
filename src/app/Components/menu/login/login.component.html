@@ -1,0 +1,94 @@
+<p-toast [style]="{ marginTop: '80px' }" position="top-center" baseZIndex="100000"></p-toast>
+
+<div id="bodyMain">
+  <div class="back-image"></div>
+  <div>
+    <h1 *ngIf="!sinCookie">Bienvenido</h1>
+    <div class="ui-g">
+      <div class="ui-lg-4 ui-md-2 ui-sm-0"></div>
+      <div class="ui-lg-4 ui-md-8 ui-sm-12 container-info">
+        <div class="panel-login">
+          <p-panel header="Iniciar sesión" *ngIf="sinCookie">
+            <div class="logo-salle-login">
+              <img src="assets/images/logousalle.png" alt="logosalle" width="185px" class="logo-salle" />
+            </div>
+            <div class="info-login">
+              <p>
+                <b>Apreciado usuario,</b>
+              </p>
+              <p style="height: 16px;"></p>
+              <p>
+                Para ingresar al Sistema de Información Académica, por favor ingrese su usuario de correo electrónico
+                institucional <b>(sin @unisalle.edu.co/@lasalle.edu.co)</b> y su respectiva contraseña.
+              </p>
+              <p style="height: 9px;"></p>
+              <p><b>Ejemplo:</b></p>
+              <p>
+                Si el correo electrónico es: <b><span style="text-decoration: underline;">pfarfan</span>@unisalle.edu.co</b>
+              </p>
+              <p style="height: 9px;"></p>
+              <p>Usuario: <b>pfarfan</b></p>
+              <p style="height: 9px;"></p>
+              <p>Recuerde que su contraseña corresponde a la de su <b>correo electrónico institucional.</b></p>
+            </div>
+            <div class="ui-inputgroup div-input">
+              <span class="ui-inputgroup-addon"><i class="pi pi-user"></i></span>
+              <input class="input-text" type="text" pInputText placeholder="Usuario" [(ngModel)]="usuario" />
+            </div>
+            <div class="ui-inputgroup div-input">
+              <span class="ui-inputgroup-addon"><i class="pi pi-key"></i></span>
+              <input
+                class="input-text"
+                [type]="hide ? 'password' : 'text'"
+                pInputText
+                placeholder="Contraseña"
+                [(ngModel)]="contrasena"
+                (keydown.enter)="login()"
+              />
+              <button pButton class="show-pass" [icon]="hide ? 'pi pi-eye' : 'pi pi-eye-slash'" (click)="hide = !hide"></button>
+            </div>
+            <div class="div-input">
+              <button
+                pButton
+                type="button"
+                label="Ingresar"
+                (click)="login()"
+                class="button-login"
+                [disabled]="!(usuario && contrasena)"
+              ></button>
+            </div>
+            <div class="div-input recuperar-clave">
+              <a href="https://tuclave.lasalle.edu.co" target="_blank">Si usted no recuerda su contraseña, recupérela aquí.</a>
+            </div>
+          </p-panel>
+        </div>
+      </div>
+      <div class="ui-lg-4 ui-md-2 ui-sm-0"></div>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  header="Seleccione su perfil"
+  [style]="{ width: '45%', minWidth: '45%' }"
+  [(visible)]="displaySelect"
+  [modal]="true"
+  [responsive]="true"
+  [baseZIndex]="10000"
+>
+  <p-listbox
+    [options]="perfiles"
+    [style]="{ width: '100%', minWidth: '100%' }"
+    [(ngModel)]="perfilSelected"
+    optionLabel="etiqueta"
+    (onClick)="perfilSeleccionado()"
+    filter="filter"
+    ariaFilterLabel="Buscar perfil"
+  ></p-listbox>
+</p-dialog>
+
+<div class="ui-g-12 ui-md-12 progress" id="progress" *ngIf="spinnerLoad">
+  <div class="spinner">
+    <p-progressSpinner [style]="{ width: '150px', height: '150px' }"></p-progressSpinner>
+  </div>
+</div>
