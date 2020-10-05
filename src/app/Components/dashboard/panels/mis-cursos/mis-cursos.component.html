@@ -1,21 +1,21 @@
 <p-blockUI [target]="pnl" [blocked]="blocked">
   <i
     class="pi pi-lock"
-    style="position: absolute; top: 28%; left: 33%; font-size: 10em;"
+    style="position: absolute; top: 28%; left: 33%; font-size: 10em"
     [pTooltip]="stringHelper.getResource('tooltip-blockui')"
     tooltipZIndex="99999"
   ></i>
 </p-blockUI>
 <p-panel #pnl [header]="stringHelper.getResource('header-titulo')">
-  <div class="ui-g" style="min-height: 335px;" *ngIf="!blocked">
-    <div class="ui-sm-12" style="position: relative; text-align: left; height: 100%; min-height: 335px;">
+  <div class="ui-g" style="min-height: 335px" *ngIf="!blocked">
+    <div class="ui-sm-12" style="position: relative; text-align: left; height: 100%; min-height: 335px">
       <p-table [value]="materias" [scrollable]="true" scrollHeight="333px">
         <ng-template pTemplate="body" let-materia>
           <tr>
             <div id="body-table">
               <div class="ui-g">
                 <div class="ui-g-12 padding-3">
-                  <h3 style="margin-top: 0px;">{{ materia.nombre }}</h3>
+                  <h3 style="margin-top: 0px">{{ materia.nombre }}</h3>
                 </div>
                 <div class="ui-g-3 padding-3">
                   <b>{{ stringHelper.getResource('lbl-codigo-curso') }}</b>
@@ -71,19 +71,19 @@
       <i
         class="pi pi-list"
         (click)="abrirMateriasInscritas()"
-        style="font-size: 2em; position: absolute !important; bottom: 18px !important; right: 57px !important; cursor: pointer;"
+        style="font-size: 2em; position: absolute !important; bottom: 18px !important; right: 57px !important; cursor: pointer"
       >
       </i>
       <i
         class="pi pi-calendar"
         (click)="showDialog()"
-        style="font-size: 2em; position: absolute !important; bottom: 18px !important; right: 20px !important; cursor: pointer;"
+        style="font-size: 2em; position: absolute !important; bottom: 18px !important; right: 20px !important; cursor: pointer"
       >
       </i>
     </div>
   </div>
-  <div class="ui-g" style="min-height: 335px;" *ngIf="blocked">
-    <img src="assets/images/7.jpg" alt="block-ui" style="width: 100%; height: 100%; margin: auto;" />
+  <div class="ui-g" style="min-height: 335px" *ngIf="blocked">
+    <img src="assets/images/7.jpg" alt="block-ui" style="width: 100%; height: 100%; margin: auto" />
   </div>
 </p-panel>
 
@@ -97,11 +97,11 @@
   [maximizable]="true"
   [baseZIndex]="9999"
 >
-  <div class="big-screen-only-cursos" style="padding: 1%;">
+  <div class="big-screen-only-cursos" style="padding: 1%">
     <p-table [value]="fullHorario">
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 8% !important; text-align: center;">{{ stringHelper.getResource('lbl-hora') }}</th>
+          <th style="width: 8% !important; text-align: center">{{ stringHelper.getResource('lbl-hora') }}</th>
           <th>{{ stringHelper.getResource('lbl-lunes') }}</th>
           <th>{{ stringHelper.getResource('lbl-martes') }}</th>
           <th>{{ stringHelper.getResource('lbl-miercoles') }}</th>
@@ -129,7 +129,7 @@
     <p-table [value]="miniHorario" [scrollable]="true">
       <ng-template pTemplate="body" let-mini>
         <tr>
-          <div style="padding-left: 3%;">
+          <div style="padding-left: 3%">
             <div>
               <h2>{{ mini.dia }}</h2>
             </div>
@@ -160,31 +160,31 @@
   [style]="{ width: '98%', minWidth: '98%' }"
   appendTo="body"
   [maximizable]="true"
-  [baseZIndex]="9999"
+  [baseZIndex]="99999"
 >
-  <div style="padding: 1%; text-align: left;">
+  <div style="padding: 1%; text-align: left">
     <p-table [value]="materias">
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 3% !important;">Sem</th>
-          <th style="width: 5% !important;">Cod Materia Plan</th>
-          <th style="width: 13% !important;">Materia Plan</th>
-          <th style="width: 3% !important;">Crs</th>
-          <th style="width: 3% !important;">I.h</th>
+          <th style="width: 3% !important">Sem</th>
+          <th style="width: 5% !important">Cod Materia Plan</th>
+          <th style="width: 13% !important">Materia Plan</th>
+          <th style="width: 3% !important">Crs</th>
+          <th style="width: 3% !important">I.h</th>
 
-          <th style="width: 7% !important;">Sede</th>
-          <th style="width: 17% !important;">Facultad Materia Cursar</th>
-          <th style="width: 5% !important;">Cod Materia Cursar</th>
-          <th style="width: 13% !important;">Materia Cursar</th>
+          <th style="width: 7% !important">Sede</th>
+          <th style="width: 17% !important">Facultad Materia Cursar</th>
+          <th style="width: 5% !important">Cod Materia Cursar</th>
+          <th style="width: 13% !important">Materia Cursar</th>
 
-          <th style="width: 3% !important;">Gr.</th>
-          <th style="width: 4% !important;">Lun</th>
-          <th style="width: 4% !important;">Mar</th>
-          <th style="width: 4% !important;">Mie</th>
-          <th style="width: 4% !important;">Jue</th>
-          <th style="width: 4% !important;">Vie</th>
-          <th style="width: 4% !important;">Sab</th>
-          <th style="width: 4% !important;">Syl</th>
+          <th style="width: 3% !important">Gr.</th>
+          <th style="width: 4% !important">Lun</th>
+          <th style="width: 4% !important">Mar</th>
+          <th style="width: 4% !important">Mie</th>
+          <th style="width: 4% !important">Jue</th>
+          <th style="width: 4% !important">Vie</th>
+          <th style="width: 4% !important">Sab</th>
+          <th style="width: 4% !important">Syl</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-mat>
@@ -205,7 +205,7 @@
           <td>{{ mat.tiempoHorario.jue }}</td>
           <td>{{ mat.tiempoHorario.vie }}</td>
           <td>{{ mat.tiempoHorario.sab }}</td>
-          <td (click)="openSyllabus(mat)" style="cursor: pointer; font-size: 5m;"><i class="pi pi-id-card"></i></td>
+          <td (click)="openSyllabus(mat)" style="cursor: pointer; font-size: 5m"><i class="pi pi-id-card"></i></td>
         </tr>
       </ng-template>
     </p-table>
@@ -222,5 +222,5 @@
   appendTo="body"
   [baseZIndex]="999999"
 >
-  <iframe width="100%" style="min-height: 700px; height: 100%;" [src]="url | safe"></iframe>
+  <iframe width="100%" style="min-height: 700px; height: 100%" [src]="url | safe"></iframe>
 </p-dialog>
