@@ -1027,7 +1027,7 @@ BEGIN
         INNER JOIN datos_personales dp
         ON e.codigo                         = dp.codigo_estudiante
         WHERE dp.numero_documento           =v_documento
-        AND e.MATERIAS_PENDIENTES           > 0;
+        AND e.MATERIAS_PENDIENTES           > 0; 
         IF v_cuenta                         < 1 THEN
             RETURN(NULL);
         END IF;

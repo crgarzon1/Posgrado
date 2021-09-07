@@ -28,9 +28,16 @@ export class PendientesComponent extends DataSourceChangeIdentifier implements O
     this.stringHelper = new StringResourceHelper('panel-pendientes');
     this.dataSource = DataSource.getInstance(service);
     this.dataSource.addObserver(this);
-    setTimeout(() => {
-      this.blocked = true;
-    }, 0);
+
+    if (this.dataSource.pendientes && this.dataSource.procesoAcademico && this.dataSource.prematricula) {
+      setTimeout(() => {
+        this.blocked = false;
+      }, 0);
+    } else {
+      setTimeout(() => {
+        this.blocked = true;
+      }, 0);
+    }
   }
 
   refrescarDatos() {

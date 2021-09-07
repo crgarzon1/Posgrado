@@ -49,6 +49,37 @@ export class GeneralService {
     return this.http.get<any>(environment.urlPasarela, { headers: header, params: param, withCredentials: true });
   }
 
+  actualizoDatos(): Observable<any> {
+    const obj = {
+      e: '2',
+      p: 'PKG_CTI_ACTUALIZO_DATOS.ACTUALIZO_DATOS',
+      ps: { COD_EST: `${this.codigoEstudiante}` },
+      c: '0'
+    };
+    return this.pasarela(obj);
+  }
+
+  censo(): Observable<any> {
+    const obj = {
+      e: '2',
+      p: 'PKG_CTI_CENSO.CENSO',
+      // p: 'PRC_ES_PAGO_POS',
+      ps: { COD_EST: `${this.codigoEstudiante}` },
+      c: '0'
+    };
+    return this.pasarela(obj);
+  }
+
+  // censo(): Observable<any> {
+  //   const obj = {
+  //     e: '1',
+  //     p: 'PRC_ES_PAGO_POS',
+  //     ps: { p_codigo: `${this.codigoEstudiante}` },
+  //     c: '0'
+  //   };
+  //   return this.pasarela(obj);
+  // }
+
   getGeneralidadesEstudiante(): Observable<Generalidades> {
     const obj = {
       e: '1',

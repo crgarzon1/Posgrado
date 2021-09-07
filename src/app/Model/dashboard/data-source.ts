@@ -169,9 +169,12 @@ export class DataSource {
   private sumarCreditosDeBolsa() {
     if (this.historialAcademico) {
       for (let i = 0; i < this.historialAcademico.bolsasDeCreditos.length; i++) {
-        this.historialAcademico.bolsasDeCreditos[i].creditosAprobados = this.historialAcademico.bolsasDeCreditos[i].materias
-          .map(x => x.creditos)
-          .reduce((a, b) => a + b);
+        this.historialAcademico.bolsasDeCreditos[i].creditosAprobados = 0;
+        this.historialAcademico.bolsasDeCreditos[i].materias.map(x => {
+          if (x.creditos && parseInt(x.nota) >= 3.5) {
+            this.historialAcademico.bolsasDeCreditos[i].creditosAprobados += x.creditos;
+          }
+        });
       }
     }
   }

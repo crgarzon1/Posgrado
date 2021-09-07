@@ -47,8 +47,8 @@
             <tr class="bordered-tr">
               <th style="width: 20% !important">{{ stringHelper.getResource('tbl-codigo') }}</th>
               <th style="width: 50%">{{ stringHelper.getResource('tbl-nombre') }}</th>
-              <th style="width: 15%">{{ stringHelper.getResource('tbl-nota') }}</th>
-              <th style="width: 15%">{{ stringHelper.getResource('tbl-creditos') }}</th>
+              <th style="width: 10%">{{ stringHelper.getResource('tbl-nota') }}</th>
+              <th style="width: 10%">{{ stringHelper.getResource('tbl-creditos') }}</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-materia>
@@ -74,7 +74,7 @@
           <ng-template pTemplate="footer" *ngIf="ciclo.cicloreal == 'PRIMER PERIODO' || ciclo.cicloreal == 'SEGUNDO PERIODO'">
             <tr class="tr-noborder">
               <td colspan="4" class="tr-noborder">
-                <table style="font-size: 12px; right: 5px">
+                <table style="font-size: 10px; right: 5px">
                   <tr class="tr-noborder">
                     <td>{{ stringHelper.getResource('tbl-creditos-cursados') }}:</td>
                     <td>{{ ciclo.sumatoriaCreditosCursados }}</td>
@@ -109,17 +109,18 @@
                 <tr class="bordered-tr">
                   <th style="width: 10% !important">{{ stringHelper.getResource('tbl-periodo') }}</th>
                   <th style="width: 20%">{{ stringHelper.getResource('tbl-programa') }}</th>
-                  <th style="width: 20%">{{ stringHelper.getResource('tbl-codigo-asignatura') }}</th>
+                  <th style="width: 10%">{{ stringHelper.getResource('tbl-codigo-asignatura') }}</th>
                   <th style="width: 20%">{{ stringHelper.getResource('tbl-asignatura') }}</th>
-                  <th style="width: 15%">{{ stringHelper.getResource('tbl-nota') }}</th>
-                  <th style="width: 15%">{{ stringHelper.getResource('tbl-creditos') }}</th>
+                  <th style="width: 10%">{{ stringHelper.getResource('tbl-nota') }}</th>
+                  <th style="width: 10%">{{ stringHelper.getResource('tbl-creditos') }}</th>
                 </tr>
               </ng-template>
+              ----------------------------------------------------------------------------------------------------------------------------------
               <ng-template pTemplate="body" let-materia>
                 <tr class="bordered-tr">
                   <td>
                     <span class="ui-column-title">{{ stringHelper.getResource('tbl-periodo') }}</span
-                    >201902
+                    >{{ materia.anio }}{{ materia.ciclo == '.' ? '' : materia.ciclo }}
                   </td>
                   <td>
                     <span class="ui-column-title">{{ stringHelper.getResource('tbl-programa') }}</span

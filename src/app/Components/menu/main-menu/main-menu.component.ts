@@ -15,8 +15,7 @@ import { environment } from 'src/environments/environment';
 import { InformacionUsuario } from 'src/app/Model/dashboard-ua/informacion-usuario';
 
 /**
- * Nota... Por mucho tiempo he querido arreglar esta clase masiva y horrible
- * Pero no se ha dado la oportunidad, lo siento.
+
  */
 @Component({
   selector: 'app-main-menu',

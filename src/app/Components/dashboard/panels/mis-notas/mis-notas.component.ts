@@ -20,9 +20,20 @@ export class MisNotasComponent extends DataSourceChangeIdentifier implements OnI
     this.stringHelper = new StringResourceHelper('panel-mis-notas');
     this.dataSource = DataSource.getInstance(generalService);
     this.dataSource.addObserver(this);
-    setTimeout(() => {
-      this.blocked = true;
-    }, 0);
+
+    if (
+      this.dataSource.prematricula &&
+      this.dataSource.prematricula.materias &&
+      this.dataSource.prematricula.materias.length > 0
+    ) {
+      setTimeout(() => {
+        this.blocked = false;
+      }, 0);
+    } else {
+      setTimeout(() => {
+        this.blocked = true;
+      }, 0);
+    }
   }
 
   refrescarDatos() {

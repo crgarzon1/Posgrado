@@ -1,1 +1,13 @@
 @import '../../../../styles.scss';
+.float-button {
+  position: fixed;
+  right: 30px;
+  bottom: 5%;
+  transition: all 0.2s ease-in 0s; //this is the key attribute
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.float-btn {
+  font-size: 18px;
+}

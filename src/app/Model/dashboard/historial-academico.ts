@@ -32,6 +32,8 @@ export class Materia {
   public nota: number;
   public notadigito: string;
   public notadecimal: string;
+  public ciclo: string;
+  public anio: string;
 }
 
 export class BolsaDeCreditos {

@@ -6,16 +6,16 @@
 <div id="bodyMain">
   <div class="big-screen-only-main-component">
     <p-toolbar>
-      <div class="ui-toolbar-group-left" style="margin-left: 5px;">
-        <img src="assets/images/logousalle.png" alt="Logo U Salle" width="160px" />
+      <div class="ui-toolbar-group-left" style="margin-left: 5px">
+        <!-- <img src="assets/images/logousalle.png" alt="Logo U Salle" width="160px" />-->
         <!-- <p *ngIf="externo">
 					<img src="assets/images/star.png" alt="Logo U Salle" height="20.5px" *ngIf="!logo"
 						style="position: absolute;" />
 					<span style="margin-left: 25px;"><b>PERFIL:</b> {{ labelPerfil }}</span>
 				</p> -->
       </div>
-      <div class="ui-toolbar-group-left" style="margin: 7px 0px 0px 50px;" *ngIf="unidadAcademica">
-        <div class="ui-inputgroup" style="position: inherit;">
+      <div class="ui-toolbar-group-left" style="margin: 7px 0px 0px 50px" *ngIf="unidadAcademica">
+        <div class="ui-inputgroup" style="position: inherit">
           <p-autoComplete
             [(ngModel)]="estudianteBusqueda"
             [suggestions]="estudiantesBusqueda"
@@ -49,24 +49,24 @@
 
   <div class="small-screen-only-main-component">
     <p-toolbar>
-      <div class="ui-toolbar-group-left" style="margin: 8px 0px 0px 5px;">
-        <i class="pi pi-list" (click)="displayBarSide()" style="font-size: 2em; cursor: pointer !important;"></i>
+      <div class="ui-toolbar-group-left" style="margin: 8px 0px 0px 5px">
+        <i class="pi pi-list" (click)="displayBarSide()" style="font-size: 2em; cursor: pointer !important"></i>
       </div>
-      <div class="ui-toolbar-group-left" style="margin-left: calc(50% - 115px);">
+      <div class="ui-toolbar-group-left" style="margin-left: calc(50% - 115px)">
         <img src="assets/images/logousalle.png" alt="Logo U Salle" width="160px" />
       </div>
-      <div class="ui-toolbar-group-right" style="margin: 7px 5px 0px 0px;" *ngIf="unidadAcademica">
+      <div class="ui-toolbar-group-right" style="margin: 7px 5px 0px 0px" *ngIf="unidadAcademica">
         <i
           *ngIf="!displaySearchEst"
           class="pi pi-search"
           (click)="displaySearch()"
-          style="font-size: 2em; cursor: pointer !important;"
+          style="font-size: 2em; cursor: pointer !important"
         ></i>
         <i
           *ngIf="displaySearchEst"
           class="pi pi-times"
           (click)="displaySearch()"
-          style="font-size: 2em; cursor: pointer !important;"
+          style="font-size: 2em; cursor: pointer !important"
         ></i>
       </div>
     </p-toolbar>
@@ -90,7 +90,7 @@
   <div *ngIf="estudiante">
     <app-main-dashboard></app-main-dashboard>
   </div>
-  <div *ngIf="externo" style="width: 100%; height: 100%;">
+  <div *ngIf="externo" style="width: 100%; height: 100%">
     <iframe
       style="
         position: fixed;
@@ -99,7 +99,7 @@
         bottom: 0;
         right: 0;
         width: calc(100% - 15px);
-        height: calc(100% - 84.6px);
+        height: calc(100% - 140.6px);
         border: none;
         margin: 0px 8px;
       "
@@ -172,8 +172,8 @@
   [baseZIndex]="10000"
   positionTop="1%"
 >
-  <div [ngSwitch]="ventana" class="content-dialog-pop" style="height: 100%;">
-    <iframe width="100%" style="min-height: 700px; height: 100%;" [src]="url | safe" *ngSwitchCase="'url'"></iframe>
+  <div [ngSwitch]="ventana" class="content-dialog-pop" style="height: 100%">
+    <iframe width="100%" style="min-height: 700px; height: 100%" [src]="url | safe" *ngSwitchCase="'url'"></iframe>
     <app-integrados *ngSwitchCase="'integrados'"></app-integrados>
     <app-main-matricula *ngSwitchCase="'matricula'" [estudiante]="estudiantePrematricula"></app-main-matricula>
     <app-creditos-adicionales *ngSwitchCase="'creditosAdicionales'"></app-creditos-adicionales>
@@ -205,8 +205,8 @@
   [maximizable]="true"
   [baseZIndex]="100000"
 >
-  <div style="width: 80%; margin: auto;">
-    <div style="width: 100%;">
+  <div style="width: 80%; margin: auto">
+    <div style="width: 100%">
       <h3>Ingrese los datos solicitados:</h3>
     </div>
     <div *ngFor="let param of paramsAccessPoint; let i = index">
@@ -214,14 +214,14 @@
         type="text"
         pInputText
         placeholder="{{ param.label }}"
-        style="width: 100%; margin-bottom: 3%;"
+        style="width: 100%; margin-bottom: 3%"
         [(ngModel)]="paramsAccessFill[i].value"
         autocomplete="off"
       />
     </div>
     <br />
-    <div style="width: 80%; margin: auto;">
-      <button pButton type="button" label="Enviar" style="width: 100%;" (click)="displayModalAccessPoint()"></button>
+    <div style="width: 80%; margin: auto">
+      <button pButton type="button" label="Enviar" style="width: 100%" (click)="displayModalAccessPoint()"></button>
     </div>
     <br />
   </div>
@@ -237,8 +237,8 @@
   [style]="{ width: '25%', minWidth: '25%' }"
   [maximizable]="true"
 >
-  <div style="width: 80%; margin: auto;">
-    <div style="width: 100%;">
+  <div style="width: 80%; margin: auto">
+    <div style="width: 100%">
       <h3>Ingrese los datos solicitados:</h3>
     </div>
     <div>
@@ -246,15 +246,15 @@
         type="text"
         pInputText
         placeholder="Código de estudiante"
-        style="width: 100%; margin-bottom: 3%;"
+        style="width: 100%; margin-bottom: 3%"
         [(ngModel)]="codigoEstudiante"
         autocomplete="off"
         (keydown.enter)="buscarEstPrem($event)"
       />
     </div>
     <br />
-    <div style="width: 80%; margin: auto;">
-      <button pButton type="button" label="Enviar" style="width: 100%;" (click)="displayModalPrematricula()"></button>
+    <div style="width: 80%; margin: auto">
+      <button pButton type="button" label="Enviar" style="width: 100%" (click)="displayModalPrematricula()"></button>
     </div>
     <br />
   </div>
@@ -270,8 +270,8 @@
   [style]="{ width: '25%', minWidth: '25%' }"
   [maximizable]="true"
 >
-  <div style="width: 80%; margin: auto;">
-    <div style="width: 100%;">
+  <div style="width: 80%; margin: auto">
+    <div style="width: 100%">
       <h3>Ingrese los datos solicitados:</h3>
     </div>
     <div>
@@ -279,15 +279,15 @@
         type="text"
         pInputText
         placeholder="Código de estudiante"
-        style="width: 100%; margin-bottom: 3%;"
+        style="width: 100%; margin-bottom: 3%"
         [(ngModel)]="codigoEstudianteConsultaGeneral"
         autocomplete="off"
         (keydown.enter)="buscarEstConsGeneral($event)"
       />
     </div>
     <br />
-    <div style="width: 80%; margin: auto;">
-      <button pButton type="button" label="Enviar" style="width: 100%;" (click)="displayConsultaGeneral()"></button>
+    <div style="width: 80%; margin: auto">
+      <button pButton type="button" label="Enviar" style="width: 100%" (click)="displayConsultaGeneral()"></button>
     </div>
     <br />
   </div>
@@ -303,18 +303,18 @@
   [style]="{ width: '25%', minWidth: '25%' }"
   [maximizable]="true"
 >
-  <div style="width: 80%; margin: auto;">
-    <div style="width: 100%;" *ngIf="unidadAcademica">
-      <div style="width: 100%;">
+  <div style="width: 80%; margin: auto">
+    <div style="width: 100%" *ngIf="unidadAcademica">
+      <div style="width: 100%">
         <h3>Ingrese los datos solicitados:</h3>
       </div>
-      <div class="ui-inputgroup" style="width: 100%;">
+      <div class="ui-inputgroup" style="width: 100%">
         <input
           type="text"
           pInputText
           placeholder="Codigo Estudiante"
           [(ngModel)]="codigoEstudiante"
-          style="width: 100%;"
+          style="width: 100%"
           autocomplete="off"
           (keydown.enter)="buscarEstGuia($event)"
         />
@@ -322,7 +322,7 @@
       </div>
     </div>
     <br />
-    <div *ngIf="cargaPeriodos" style="width: 100%;">
+    <div *ngIf="cargaPeriodos" style="width: 100%">
       <h3>Seleccione la guía que desea pagar</h3>
       <p-listbox
         [options]="periodosGuia.periodos"
@@ -332,12 +332,12 @@
         (onClick)="seleccionGuia()"
       ></p-listbox>
       <br />
-      <div style="width: 80%; margin: auto;">
+      <div style="width: 80%; margin: auto">
         <button
           pButton
           type="button"
           [label]="generarGuia"
-          style="width: 100%;"
+          style="width: 100%"
           (click)="openGuia()"
           [disabled]="buttonGuiaDisabled"
         ></button>

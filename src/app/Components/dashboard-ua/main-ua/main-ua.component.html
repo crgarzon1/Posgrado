@@ -1,8 +1,8 @@
-<div style="width: 100%; text-align: center; font-size: 14px;" *ngIf="programa">
+<div style="width: 100%; text-align: center; font-size: 14px" *ngIf="programa">
   <p>
     <b>{{ programa }}</b> <br />
     <b>{{ cargo }}</b>
-    <b style="font-size: 13px;">{{ nombre }}</b>
+    <b style="font-size: 13px">{{ nombre }}</b>
   </p>
 </div>
 
@@ -36,7 +36,7 @@
 <p-toast position="bottom-right" key="c" [baseZIndex]="50000">
   <ng-template let-message pTemplate="message">
     <div>
-      <h2 style="text-align: center;">{{ message.detail }}</h2>
+      <h2 style="text-align: center">{{ message.detail }}</h2>
       <h3>{{ infoUsuario.nombre }}</h3>
       <p *ngFor="let prop of infoUsuario.propiedades">
         <b>{{ prop.key }}:</b> {{ prop.value }}

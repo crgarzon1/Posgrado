@@ -26,9 +26,17 @@ export class MisAsignaturasComponent extends DataSourceChangeIdentifier implemen
     this.stringHelper = new StringResourceHelper('panel-mis-asignaturas');
     this.dataSource = DataSource.getInstance(generalService);
     this.dataSource.addObserver(this);
-    setTimeout(() => {
-      this.blocked = true;
-    }, 0);
+    if (this.dataSource.generalidades) {
+      this.refrescarChart();
+      setTimeout(() => {
+        this.blocked = false;
+      }, 0);
+      this.labelTotal = 'Total Materias: ' + this.dataSource.generalidades.totalMateriasPlan;
+    } else {
+      setTimeout(() => {
+        this.blocked = true;
+      }, 0);
+    }
   }
 
   ngOnInit() {
